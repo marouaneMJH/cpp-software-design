@@ -3,8 +3,7 @@
 #include <iostream>
 #include <vector>
 
-// #define MAX_RAND_ELE 1000000
-// #define STACK_INSERT_ELE_COUNT 100
+
 
 using namespace std;
 

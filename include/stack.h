@@ -1,18 +1,9 @@
 #pragma once
 
 #include <iostream>
-#define MAX_RAND_ELE 1000000
-#define STACK_INSERT_ELE_COUNT 800000000
+#include "node.h"
 
 using namespace std;
-
-template <class T>
-struct Node
-{
-    T _data;
-    Node<T> *next;
-    Node<T> *_prev;
-};
 
 // STL vector
 // Linked list

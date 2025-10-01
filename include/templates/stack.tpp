@@ -1,8 +1,7 @@
 #include "./../stack.h"
+
 template <typename T>
-Stack<T>::Stack()
-{
-}
+Stack<T>::Stack() {}
 
 template <typename T>
 Stack<T>::Stack(const Stack *stack)
@@ -37,11 +36,12 @@ bool Stack<T>::empty()
 template <typename T>
 bool Stack<T>::push(T newElement)
 {
-    Node<T> *node = new Node<T>;
+
+    Node<T> *node = new Node<T>(newElement, _head);
+
     if (!node)
         return false;
-    node->_data = newElement;
-    node->_prev = nullptr;
+
     if (this->empty())
     {
         _head = node;
@@ -49,9 +49,9 @@ bool Stack<T>::push(T newElement)
     }
     else
     {
-        node->_prev = _head;
         _head = node;
     }
+
     _size++;
     return true;
 }
@@ -70,11 +70,13 @@ template <typename T>
 T Stack<T>::pop()
 {
     if (empty())
-        throw new runtime_error("Error");
+        throw out_of_range("[-] Can't pop from the stack, stack is empty.");
 
+    // Save the head add to free it after
     Node<T> *nodeHead = _head;
     T returnedVal = _head->_data;
 
+    // Change the head to the prev head
     _head = _head->_prev;
     _size--;
 

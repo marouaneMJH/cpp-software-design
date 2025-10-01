@@ -10,14 +10,14 @@ SRCS = $(shell find src -name "*.cpp")
 OBJS = $(patsubst src/%.cpp, build/%.o, $(SRCS))
 
 # Règle par défaut
-all:  build_dirs compile run
+all:   compile run
 
 # Crée les sous-dossiers dans build/ en miroir de src/
 build_dirs:
 	@mkdir -p $(dir $(OBJS))
 
 
-compile:  $(TARGET)
+compile:  build_dirs $(TARGET)
 
 # Lien final
 $(TARGET): $(OBJS)
@@ -33,6 +33,12 @@ build/%.o: src/%.cpp
 run: $(TARGET)
 	@echo "[!] Running $(TARGET)"
 	@./$(TARGET) && echo "[+] Done running" || echo "[-] Runtime error"
+
+
+test: clean compile 
+	@echo "[!] testing... "
+	@time ./$(TARGET) && echo "[+] Test successful" || echo "[-] Test failed"
+
 
 # Nettoyage
 clean:
