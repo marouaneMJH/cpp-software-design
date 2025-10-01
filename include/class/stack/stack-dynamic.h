@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "./interface/stack.h"
+#include "./../../interface/stack.h"
 
 #define RESIZE_FACTOR 2
 
@@ -32,4 +32,4 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const StackDynamic<U> &stack);
 };
 
-#include "./templates/stack-dynamic.tpp"
+#include "./../../templates/stack-dynamic.tpp"

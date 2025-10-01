@@ -36,4 +36,4 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const StackVec<U> &stack);
 };
 
-#include "./templates/stack-vector.tpp"
+#include "./../../templates/stack-vector.tpp"

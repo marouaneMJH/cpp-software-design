@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "./../stack-dynamic.h"
+#include "./../class/stack/stack-dynamic.h"
 
 template <typename T>
 StackDynamic<T>::StackDynamic() : capacity(1), topIndex(-1)

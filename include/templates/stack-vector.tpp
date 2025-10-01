@@ -1,4 +1,4 @@
-#include "./../stack-vector.h"
+#include "./../class/stack/stack-vector.h"
 template <typename T>
 StackVec<T>::StackVec()
 {

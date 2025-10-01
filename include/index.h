@@ -1,8 +1,6 @@
 #pragma once
-#include "./stack.h"
-#include "./stack-vector.h"
-#include "./stack-dynamic.h"
+#include "./class/stack/index.h"
 
-#define MAX_RAND_ELE 1000000
-// 1 bilion
+#define MAX_RAND_ELE 100'000
+// 1 billion
 #define STACK_INSERT_ELE_COUNT 1'000

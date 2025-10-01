@@ -1,4 +1,4 @@
-#include "./../node.h"
+#include "./../class/stack/node.h"
 #define TEMPLATE(T) template <class T>
 
 TEMPLATE(T)

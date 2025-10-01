@@ -1,4 +1,4 @@
-#include "./../stack.h"
+#include "./../class/stack/stack-linked.h"
 
 template <typename T>
 StackLinked<T>::StackLinked() : _data(nullptr), _head(nullptr), _size(0) {}

@@ -16,4 +16,4 @@ public:
     T getData() const;
 };
 
-#include "./templates/node.tpp"
+#include "./../../templates/node.tpp"

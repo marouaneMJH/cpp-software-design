@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "./interface/stack.h"
+#include "./../../interface/stack.h"
 #include "node.h"
 
 using namespace std;
@@ -35,4 +35,4 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const StackLinked<U> &stack);
 };
 
-#include "./templates/stack.tpp"
+#include "./../../templates/stack-linked.tpp"
