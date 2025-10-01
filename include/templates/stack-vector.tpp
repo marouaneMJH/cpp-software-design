@@ -15,7 +15,7 @@ StackVec<T>::~StackVec()
 }
 
 template <typename T>
-bool StackVec<T>::empty()
+bool StackVec<T>::empty() const
 {
     return _data.size() == 0;
 }
@@ -40,7 +40,7 @@ T StackVec<T>::pop()
 }
 
 template <typename T>
-int StackVec<T>::getSize()
+unsigned StackVec<T>::getSize() const
 {
     return _data.size();
 }

@@ -1,11 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include "./interface/stack.h"
 
 #define RESIZE_FACTOR 2
 
 template <typename T>
-class StackDynamic
+class StackDynamic : public Stack<T>
 {
 private:
     T *arr;       // Pointer to the dynamically allocated array
@@ -19,15 +20,13 @@ public:
 
     ~StackDynamic();
 
-    void push(T value);
+    bool empty() const override;
+    bool push(T newElement) override;
+    T pop() override;
 
-    T pop();
+    unsigned getSize() const override;
 
-    T top();
-
-    bool isEmpty();
-
-    int size();
+    T getHead();
 
     template <typename U>
     friend std::ostream &operator<<(std::ostream &os, const StackDynamic<U> &stack);

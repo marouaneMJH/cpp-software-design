@@ -1,16 +1,14 @@
 #pragma once
 
 #include <iostream>
+
+#include "./interface/stack.h"
 #include "node.h"
 
 using namespace std;
 
-// STL vector
-// Linked list
-// Dynamic table
-
 template <class T>
-class Stack
+class StackLinked : public Stack<T>
 {
 private:
     Node<T> *_data;
@@ -20,24 +18,21 @@ private:
     void freeStack();
 
 public:
-    Stack();
+    StackLinked();
 
-    Stack(const Stack *stack);
+    // StackLinked(const StackLinked<T> &stack);
+    ~StackLinked();
 
-    ~Stack();
+    bool empty() const override;
 
-    bool empty();
+    bool push(T newElement) override;
 
-    bool push(T newElement);
+    T pop() override;
 
-    T pop();
-
-    T getHead();
-
-    int getSize();
+    unsigned getSize() const override;
 
     template <typename U>
-    friend std::ostream &operator<<(std::ostream &os, const Stack<U> &stack);
+    friend std::ostream &operator<<(std::ostream &os, const StackLinked<U> &stack);
 };
 
 #include "./templates/stack.tpp"

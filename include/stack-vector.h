@@ -3,8 +3,6 @@
 #include <iostream>
 #include <vector>
 
-
-
 using namespace std;
 
 // STL vector
@@ -12,7 +10,7 @@ using namespace std;
 // Dynamic table
 
 template <class T>
-class StackVec
+class StackVec : public Stack<T>
 {
 private:
     vector<T> _data;
@@ -24,15 +22,15 @@ public:
 
     ~StackVec();
 
-    bool empty();
+    bool empty() const override;
 
-    bool push(T newElement);
+    bool push(T newElement) override;
 
-    T pop();
+    T pop() override;
 
-    T getHead();
+    // T getHead();
 
-    int getSize();
+    unsigned getSize() const override;
 
     template <typename U>
     friend std::ostream &operator<<(std::ostream &os, const StackVec<U> &stack);

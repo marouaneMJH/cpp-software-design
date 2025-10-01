@@ -1,11 +1,10 @@
+#include <algorithm>
 #include "./../stack-dynamic.h"
 
 template <typename T>
-StackDynamic<T>::StackDynamic()
+StackDynamic<T>::StackDynamic() : capacity(1), topIndex(-1)
 {
-    capacity = 1;
     arr = new T[capacity];
-    topIndex = -1;
 }
 
 template <typename T>
@@ -19,50 +18,44 @@ void StackDynamic<T>::resize()
 {
     capacity *= RESIZE_FACTOR;
     T *newArr = new T[capacity];
-    for (int i = 0; i <= topIndex; ++i)
-        newArr[i] = arr[i];
-
+    std::copy(arr, arr + topIndex + 1, newArr);
     delete[] arr;
     arr = newArr;
 }
 
 template <typename T>
-void StackDynamic<T>::push(T value)
+bool StackDynamic<T>::push(T newElement)
 {
     if (topIndex == capacity - 1)
         resize();
-
-    arr[++topIndex] = value;
+    arr[++topIndex] = newElement;
+    return true;
 }
 
 template <typename T>
 T StackDynamic<T>::pop()
 {
-    if (isEmpty())
-    {
+    if (empty())
         throw std::out_of_range("Stack is empty!");
-    }
     return arr[topIndex--];
 }
 
 template <typename T>
-T StackDynamic<T>::top()
+T StackDynamic<T>::getHead()
 {
-    if (isEmpty())
-    {
+    if (empty())
         throw std::out_of_range("Stack is empty!");
-    }
     return arr[topIndex];
 }
 
 template <typename T>
-bool StackDynamic<T>::isEmpty()
+bool StackDynamic<T>::empty() const
 {
     return topIndex == -1;
 }
 
 template <typename T>
-int StackDynamic<T>::size()
+unsigned StackDynamic<T>::getSize() const
 {
     return topIndex + 1;
 }
@@ -71,12 +64,12 @@ template <typename U>
 std::ostream &operator<<(std::ostream &os, const StackDynamic<U> &stack)
 {
     os << "[";
-    for (int i = stack.topIndex; i > 0; i--)
-        os << stack.arr[i] << " ,";
-
-    if (stack.topIndex >= 0)
-        os << stack.arr[0];
-
+    for (int i = stack.topIndex; i >= 0; --i)
+    {
+        os << stack.arr[i];
+        if (i > 0)
+            os << ", ";
+    }
     os << "]";
     return os;
 }

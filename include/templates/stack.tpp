@@ -1,40 +1,22 @@
 #include "./../stack.h"
 
 template <typename T>
-Stack<T>::Stack() {}
+StackLinked<T>::StackLinked() : _data(nullptr), _head(nullptr), _size(0) {}
 
 template <typename T>
-Stack<T>::Stack(const Stack *stack)
-{
-    if (!stack)
-        return;
-
-    if (this->empty())
-    {
-        _head = stack->_head;
-        _data = stack->_data;
-        _size = stack->_size;
-    }
-
-    _head->next = stack->_data;
-    _head = stack->_head;
-    _size += stack->_size;
-}
-
-template <typename T>
-Stack<T>::~Stack()
+StackLinked<T>::~StackLinked()
 {
     freeStack();
 }
 
 template <typename T>
-bool Stack<T>::empty()
+bool StackLinked<T>::empty() const
 {
-    return this->_size == 0;
+    return this->_size == 0 && _head == nullptr;
 }
 
 template <typename T>
-bool Stack<T>::push(T newElement)
+bool StackLinked<T>::push(T newElement)
 {
 
     Node<T> *node = new Node<T>(newElement, _head);
@@ -42,7 +24,7 @@ bool Stack<T>::push(T newElement)
     if (!node)
         return false;
 
-    if (this->empty())
+    if (empty())
     {
         _head = node;
         _data = node;
@@ -57,7 +39,7 @@ bool Stack<T>::push(T newElement)
 }
 
 template <typename T>
-void Stack<T>::freeStack()
+void StackLinked<T>::freeStack()
 {
 
     while (!empty())
@@ -67,17 +49,17 @@ void Stack<T>::freeStack()
 }
 
 template <typename T>
-T Stack<T>::pop()
+T StackLinked<T>::pop()
 {
     if (empty())
         throw out_of_range("[-] Can't pop from the stack, stack is empty.");
 
     // Save the head add to free it after
     Node<T> *nodeHead = _head;
-    T returnedVal = _head->_data;
+    T returnedVal = _head->getData();
 
     // Change the head to the prev head
-    _head = _head->_prev;
+    _head = _head->getPrev();
     _size--;
 
     delete nodeHead;
@@ -86,13 +68,13 @@ T Stack<T>::pop()
 }
 
 template <typename T>
-int Stack<T>::getSize()
+unsigned StackLinked<T>::getSize() const
 {
     return _size;
 }
 
 template <typename T>
-std::ostream &operator<<(std::ostream &os, const Stack<T> &stack)
+std::ostream &operator<<(std::ostream &os, const StackLinked<T> &stack)
 {
     Node<T> *current = stack._head;
     os << "[";
