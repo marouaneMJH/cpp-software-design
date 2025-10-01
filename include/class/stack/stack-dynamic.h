@@ -9,9 +9,9 @@ template <typename T>
 class StackDynamic : public Stack<T>
 {
 private:
-    T *arr;       // Pointer to the dynamically allocated array
-    int capacity; // Current capacity of the array
-    int topIndex; // Index of the top element
+    T *_arr;       // Pointer to the dynamically allocated array
+    int _capacity; // Current capacity of the array
+    int _topIndex; // Index of the top element
 
     void resize();
 
