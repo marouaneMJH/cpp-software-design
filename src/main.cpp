@@ -16,6 +16,7 @@ int main()
 
     try
     {
+        stack.pop();
     }
     catch (error_t errors)
     {
