@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+
 #include "./../../interface/stack.h"
 
 #define RESIZE_FACTOR 2
@@ -21,7 +22,9 @@ public:
     ~StackDynamic();
 
     bool empty() const override;
+
     bool push(T newElement) override;
+
     T pop() override;
 
     unsigned getSize() const override;

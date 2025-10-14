@@ -2,25 +2,13 @@
 
 int main()
 {
-//    StackLinked<int> stack = StackLinked<int>();
-    StackVec<int> stackVec = StackVec<int>();
-    //  StackDynamic<int> stackDynamic = StackDynamic<int>();
+    vector<string> expressions = {"2+3", "[2+x]{}", "19*{[(x-y)*2]/[2 + [5 + 6 * (y)]*10-17*(8*y-10)]}"};
+    // vector<string> expressions = {"()"};
 
-    for (int i = 0; i < STACK_INSERT_ELE_COUNT; i++)
+    for (string expression : expressions)
     {
-// stack.push(rand() % MAX_RAND_ELE);
-        stackVec.push(rand() % MAX_RAND_ELE);
-
-//         stackDynamic.push(rand() % MAX_RAND_ELE);
+        cout
+            << expression << " : " << (MathExpress::isValidMathExpression(expression) ? "valid" : "unvalid") << endl;
     }
-
-    // try
-    // {
-    // }
-    // catch (error_t errors)
-    // {
-    //     cout << "";
-    // }
-
     return 0;
 }
