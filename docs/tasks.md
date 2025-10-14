@@ -1,0 +1,7 @@
+-   [ ] Work on mathematical expression, check the validity of the it.
+-   [ ] Add iterator to the stack.
+-   [ ] What is AVL, can we implement it on stack.
+-   [ ] What is ARB, can we implement it on stack.
+-   [ ] NP and P problems
+-   [ ]
+-   [ ] Write the press release
