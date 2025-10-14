@@ -83,16 +83,8 @@ bool MathExpress::isValidMathExpression(string strExpression)
         if (_isCloseSymbol(symbolStack.getHead()))
             return false;
 
-        //
-        for (int i = 0; i < (int)openSymbols.size(); i++)
-        {
-
-            if (currentChar == closeSymbols[i])
-            {
-                symbolStack.pop();
-                break;
-            }
-        }
+        // Cancel the open symbol
+        symbolStack.pop();
     }
 
     return symbolStack.empty();
