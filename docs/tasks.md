@@ -4,4 +4,6 @@
 -   [ ] What is ARB, can we implement it on stack.
 -   [ ] NP and P problems
 -   [ ]
+-   [ ] hitorigen list
+-   [ ] Add iterator to stack
 -   [ ] Write the press release
