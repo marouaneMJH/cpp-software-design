@@ -35,10 +35,9 @@ run: $(TARGET)
 	@./$(TARGET) && echo "[+] Done running" || echo "[-] Runtime error"
 
 
-test: clean compile 
+test: clean compile
 	@echo "[!] testing... "
-	@time ./$(TARGET) && echo "[+] Test successful" || echo "[-] Test failed"
-
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) && echo "[+] Test successful" || echo "[-] Test failed"
 
 # Nettoyage
 clean:

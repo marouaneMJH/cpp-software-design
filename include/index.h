@@ -1,6 +1,7 @@
 #pragma once
 #include "./class/stack/index.h"
 #include "./class/math-expression.h"
+#include "class/lists/HList.h"
 
 #define MAX_RAND_ELE 100'000
 // 100 million
