@@ -45,6 +45,25 @@ public:
         return os;
     }
 
+
+    void printHead(unsigned int wordsNum)
+    {
+        if (wordsNum > _dic.size()) {
+            wordsNum = _dic.size();
+        }
+
+        for (unsigned int i = 0; i < wordsNum; ++i) {
+            cout << _dic[i] << " ";
+        }
+        cout << endl;
+    }
+
+
+    int getSize()const
+    {
+        return _dic.size();
+    }
+
     // Load vector data from file
     // make sure the path should be the from the make runing position
     void readFromFile(string inFilePath)
@@ -74,6 +93,29 @@ public:
     {
         return find(_dic.begin(), _dic.end(), word);
     }
+
+    void  findDicPrinted(const string &word)
+    {
+        vector<string>::iterator it = _dic.begin();
+        bool found = false;
+        
+        while (it != _dic.end()) {
+            it = find(it, _dic.end(), word);
+            if (it != _dic.end()) {
+            cout << "Found \"" << *it << "\" at position: " << distance(_dic.begin(), it) << endl;
+            found = true;
+            ++it; // Move to next element to continue search
+            }
+        }
+        
+        if (!found) {
+            cout << "Word \"" << word << "\" not found in dictionary." << endl;
+        }
+
+    }
+
+
+
 
     // Sort by reversed order
     void sortReversDic()

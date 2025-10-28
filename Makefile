@@ -37,7 +37,8 @@ run: $(TARGET)
 
 test: clean compile
 	@echo "[!] testing... "
-	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) && echo "[+] Test successful" || echo "[-] Test failed"
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) && echo && echo "[+] Test successful" || echo "[-] Test failed"
 
 # Nettoyage
 clean:
