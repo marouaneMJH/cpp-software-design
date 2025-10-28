@@ -27,32 +27,114 @@ public:
     void print() const override { std::cout << "String: " << value << '\n'; }
 };
 
-/// Concrete element representing a function pointer.
-/// When printed, it executes the associated function.
-class FunctionElement : public Element {
-    void (*func)();
+/// Concrete element representing a double value.
+class DoubleElement : public Element {
+    double value;
 public:
-    explicit FunctionElement(void (*f)()) : func(f) {}
-    void print() const override {
-        std::cout << "Function call: ";
-        func();
-    }
+    explicit DoubleElement(double v) : value(v) {}
+    void print() const override { std::cout << "Double: " << value << '\n'; }
 };
 
-/// Example function used by FunctionElement.
-void sayHello() { std::cout << "Hello from function!\n"; }
+/// Concrete element representing a boolean value.
+class BoolElement : public Element {
+    bool value;
+public:
+    explicit BoolElement(bool v) : value(v) {}
+    void print() const override { std::cout << "Bool: " << (value ? "true" : "false") << '\n'; }
+};
 
-// int main() {
-//     // A heterogeneous list storing elements of different types
-//     // using polymorphism and smart pointers for safe memory management.
-//     std::vector<std::shared_ptr<Element>> list;
+/// Concrete element representing a character value.
+class CharElement : public Element {
+    char value;
+public:
+    explicit CharElement(char v) : value(v) {}
+    void print() const override { std::cout << "Char: '" << value << "'\n"; }
+};
 
-//     // Add elements of various types to the list
-//     list.push_back(std::make_shared<IntElement>(42));
-//     list.push_back(std::make_shared<StringElement>("Rawal"));
-//     list.push_back(std::make_shared<FunctionElement>(sayHello));
+/// Concrete element representing a float value.
+class FloatElement : public Element {
+    float value;
+public:
+    explicit FloatElement(float v) : value(v) {}
+    void print() const override { std::cout << "Float: " << value << "f\n"; }
+};
 
-//     // Iterate through all elements and invoke their respective print methods
-//     for (const auto& e : list)
-//         e->print();
-// }
+/// Concrete element representing a long value.
+class LongElement : public Element {
+    long value;
+public:
+    explicit LongElement(long v) : value(v) {}
+    void print() const override { std::cout << "Long: " << value << "L\n"; }
+};
+
+/// Heterogeneous list class that can store different data types
+class HList {
+private:
+    std::vector<std::shared_ptr<Element>> elements;
+
+public:
+    /// Add an integer to the list
+    void add(int value) {
+        elements.push_back(std::make_shared<IntElement>(value));
+    }
+    
+    /// Add a string to the list
+    void add(const std::string& value) {
+        elements.push_back(std::make_shared<StringElement>(value));
+    }
+    
+    /// Add a double to the list
+    void add(double value) {
+        elements.push_back(std::make_shared<DoubleElement>(value));
+    }
+    
+    /// Add a boolean to the list
+    void add(bool value) {
+        elements.push_back(std::make_shared<BoolElement>(value));
+    }
+    
+    /// Add a character to the list
+    void add(char value) {
+        elements.push_back(std::make_shared<CharElement>(value));
+    }
+    
+    /// Add a float to the list
+    void add(float value) {
+        elements.push_back(std::make_shared<FloatElement>(value));
+    }
+    
+    /// Add a long to the list
+    void add(long value) {
+        elements.push_back(std::make_shared<LongElement>(value));
+    }
+    
+    /// Add any Element-derived object
+    void add(std::shared_ptr<Element> element) {
+        elements.push_back(element);
+    }
+    
+    /// Get the size of the list
+    size_t size() const {
+        return elements.size();
+    }
+    
+    /// Check if list is empty
+    bool empty() const {
+        return elements.empty();
+    }
+    
+    /// Clear all elements
+    void clear() {
+        elements.clear();
+    }
+    
+    /// Overload << operator for easy printing
+    friend std::ostream& operator<<(std::ostream& os, const HList& list) {
+        os << "HList [" << list.size() << " elements]:\n";
+        for (const auto& element : list.elements) {
+            os << "  ";
+            element->print();
+        }
+        return os;
+    }
+};
