@@ -35,10 +35,37 @@ run: $(TARGET)
 	@./$(TARGET) && echo "[+] Done running" || echo "[-] Runtime error"
 
 
+main: 
+	@$(CXX) $(CXXFLAGS) -o build/main.exe src/main.cpp 
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./build/main.exe && echo && echo "[+] Test successful" || echo "[-] Test failed"
+	
+
+
 test: clean compile
 	@echo "[!] testing... "
 	@echo ;
-	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) && echo && echo "[+] Test successful" || echo "[-] Test failed"
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) main && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-adaptor: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) adaptor && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-iterator: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) iterator && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-h-list: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) h-list && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-math-expression: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) math-expression && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
 
 # Nettoyage
 clean:

@@ -58,6 +58,10 @@ public:
         cout << endl;
     }
 
+    vector<string>  &getDic()
+    {
+        return _dic;
+    }
 
     int getSize()const
     {
