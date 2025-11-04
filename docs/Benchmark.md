@@ -1,13 +1,25 @@
-## Résultats bruts
 
-| Implémentation | Temps réel (s) | Temps user (s) | Temps sys (s) |
-| -------------- | -------------- | -------------- | ------------- |
-| Linked List    | 10.232         | 8.680          | 1.465         |
-| Dynamique      | 3.608          | 3.096          | 0.477         |
-| Vector (STL)   | 4.637          | 4.087          | 0.500         |
+| Implementation            | Median Time (s) | Speedup vs Linked List | Throughput (ops/s) |
+| ------------------------- | :-------------: | :--------------------: | :----------------: |
+| **Vector (STL, reserve)** |     **2.7**     |        **×4.6**        |   **≈ 18.5 M/s**   |
+| **Dynamic Array**         |     **3.2**     |        **×3.9**        |   **≈ 15.6 M/s**   |
+| **Linked List**           |     **12.5**    |        **×1.0**        |    **≈ 4.0 M/s**   |
 
-## Analyse
 
--   **Tableau dynamique** est le plus rapide (≈ 3.6s).
--   **Vector (STL)** est légèrement plus lent (≈ 4.6s), mais reste proche.
--   **Liste chaînée** est beaucoup plus lente (≈ 10.2s) à cause de l’allocation dynamique de nœuds et de la faible localité mémoire.
+
+Vector (STL, reserve) → fastest and most efficient.
+
+Dynamic Array → close performance, slightly slower.
+
+Linked List → far slower due to per-node allocations and poor cache locality.
+
+
+![alt text](StackPushBenchmark.png)
+
+Executive summary (median real time, 10 trials, 50M pushes/run)
+
+Vector (STL, reserve): ~2.7 s → fastest
+
+Dynamic array (custom): ~3.2 s (≈ 18% slower than fastest)
+
+Linked list: ~12.5 s (≈ 4.6× slower than fastest)

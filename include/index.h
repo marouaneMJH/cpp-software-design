@@ -2,7 +2,7 @@
 #include "./class/stack/index.h"
 #include "./class/lists/h-list.h"
 #include "./class/math-expression.h"
-#include "./class/dic.h"
+
 
 #define MAX_RAND_ELE 100'000
 // 100 million

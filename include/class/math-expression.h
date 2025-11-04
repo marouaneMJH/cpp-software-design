@@ -3,89 +3,60 @@
 #include "./stack/stack-dynamic.h"
 
 #include <string>
-#include <vector>
+#include <string_view>
 
-// todo: find better solution to save symbols instead  of global variables
-const vector<char> openSymbols = {'{', '(', '['};
-const vector<char> closeSymbols = {'}',
-                                   ')',
-                                   ']'};
-
-using namespace std;
-
-class MathExpress
-{
+class MathExpress {
 private:
-    // Check if symbolChar is open symbol
-    static bool _isOpenSymbol(char symbolChar)
-    {
+    // Tables des symboles ouvrants/fermants alignés par index
+    // '{' <-> '}', '(' <-> ')', '[' <-> ']'
+    inline static const std::string kOpen  = "{([";
+    inline static const std::string kClose = "})]";
 
-        // Check if the symbol is exist inside open symbols
-        for (char symbol : openSymbols)
-
-            if (symbol == symbolChar)
-                return true;
-
-        return false;
+    static bool isOpen(char c) {
+        return kOpen.find(c) != std::string::npos;
     }
 
-    // Check if symbolChar is close symbol
-    static bool _isCloseSymbol(char symbolChar)
-    {
-
-        // Check if the symbol is exist inside close symbols
-        for (char symbol : closeSymbols)
-            if (symbol == symbolChar)
-                return true;
-
-        return false;
+    static bool isClose(char c) {
+        return kClose.find(c) != std::string::npos;
     }
 
-    // Check if symbolChar is open or close symbol
-    static bool _isSymbol(char symbolChar)
-    {
-        return _isCloseSymbol(symbolChar) || _isOpenSymbol(symbolChar);
+    static bool isSymbol(char c) {
+        return isOpen(c) || isClose(c);
+    }
+
+    // Vrai si 'open' et 'close' forment une paire correspondante
+    static bool isMatching(char open, char close) {
+        std::size_t iOpen  = kOpen.find(open);
+        std::size_t iClose = kClose.find(close);
+        return (iOpen != std::string::npos) &&
+               (iClose != std::string::npos) &&
+               (iOpen == iClose);
     }
 
 public:
-    // Validate math expression syntax
-    static bool isValidMathExpression(string strExpression);
-};
+    // Valide la syntaxe d'une expression mathématique (parenthésage)
+    static bool isValidMathExpression(std::string_view expr) {
+        StackDynamic<char> symbolStack; // pile des symboles ouvrants
 
-bool MathExpress::isValidMathExpression(string strExpression)
-{
-    // const vector<char> openSymbols = {'{', '(', '['};
-    // const vector<char> closeSymbols = {'}', ')', ']'};
+        for (char ch : expr) {
+            // Ignorer tout caractère qui n'est pas un symbole
+            if (!isSymbol(ch)) continue;
 
-    // A stack for symbols
-    StackDynamic symbolStack = StackDynamic<char>();
+            if (isOpen(ch)) {
+                // Empiler tout symbole ouvrant
+                symbolStack.push(ch);
+            } else {
+                // On a un symbole fermant
+                if (symbolStack.empty()) return false; // rien à fermer
 
-    // for each character of the expression make sure to proccess it
-    for (char currentChar : strExpression)
-    {
+                char top = symbolStack.getHead();      // dernier ouvrant
+                if (!isMatching(top, ch)) return false; // type non correspondant
 
-        // Continue if the character is nor symbol (close or open symbol)
-        if (!_isSymbol(currentChar))
-            continue;
-
-        // If the stack empty add any symbols
-        // Check the symbols is a open symbols add it, cuz we need close symbol to cancel the open symbol.
-        if (symbolStack.empty() || _isOpenSymbol(currentChar))
-        {
-            symbolStack.push(currentChar);
-            continue;
+                symbolStack.pop(); // paire validée
+            }
         }
 
-        //  From now on, all the symbols are closed ones.
-
-        // No need to continues processing if the head is close it means the expression is unvalid.
-        // Check the head of the stack if it close, the head should be always open symbol.
-        if (_isCloseSymbol(symbolStack.getHead()))
-            return false;
-
-        // Cancel the open symbol
-        symbolStack.pop();
+        // Expression valide si aucune ouverture non fermée ne reste
+        return symbolStack.empty();
     }
-
-    return symbolStack.empty();
-}
+};
