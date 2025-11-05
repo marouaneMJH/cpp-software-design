@@ -67,6 +67,12 @@ test-math-expression: clean compile
 	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) math-expression && echo && echo "[+] Test successful" || echo "[-] Test failed"
 
 
+test-tree: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) tree && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+
 # Nettoyage
 clean:
 	@echo "[!] Cleaning build files"

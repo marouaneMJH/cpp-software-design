@@ -18,7 +18,7 @@ int adaptorClass()
     Dic dic;
     std::vector<std::string> topWords;
 
-    dic.readFromFile("assets/out_file.txt");
+    dic.readFromFile("assets/long-file.txt");
 
     // Measure time to build priority queue from vector
     auto start = high_resolution_clock::now();
@@ -41,6 +41,41 @@ int adaptorClass()
     return 0;
 }
 
+
+int treeImplementation()
+{
+    Tree<string>* t;
+
+    t  = Dic::loadFileToTree("assets/test.txt");
+
+    if (!t) {
+        std::cerr << "Failed to load tree\n";
+        return 1;
+    }
+
+    std::cout << "isEmpty(): " << std::boolalpha << t->isEmpty() << '\n';
+
+    const std::string probe = "example";
+    auto foundNode = t->find(probe);
+    std::cout << "find(\"" << probe << "\"): " << (foundNode ? "found" : "not found") << '\n';
+
+    t->addChild("inserted-node");
+
+    std::cout << "\nprintPreOrder():\n";
+    t->printPreOrder();
+
+    std::cout << "\nprintPostOrder():\n";
+    t->printPostOrder();
+
+    std::cout << "\nprintLevelOrder():\n";
+    t->printLevelOrder();
+
+    std::cout << "\ncountNodes(): " << t->countNodes() << '\n';
+    std::cout << "getHeight(): " << t->getHeight() << '\n';
+
+    return 0;
+}
+
 // -------------------------------------------------------------
 // Main Program
 // -------------------------------------------------------------
@@ -56,6 +91,8 @@ int main(int arc,  char* argv[])
         return adaptorClass();
     if(string(argv[1]) == "math-expression")
         return adaptorClass();
+    if(string(argv[1]) == "tree")
+        return treeImplementation();
 
     return 0;
 }

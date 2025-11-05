@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include "tree/tree.h"
 
 
 using namespace std;
@@ -86,6 +87,28 @@ public:
         inFile.close();
     }
 
+
+    static Tree<string>* loadFileToTree(string inFilePath)
+    {
+
+        ifstream inFile(inFilePath);
+        
+        Tree<string>* tree= new Tree<string>();
+
+        if (!inFile.is_open())
+        {
+            cout << "Error with opening \"" << inFilePath << "\"" << endl;
+            return nullptr;
+        }
+        std::string word;
+        while (inFile >> word)
+            tree->addChild(word);
+        inFile.close();
+
+
+        return tree;
+    }
+
     // Sort by default order
     void sortDic()
     {
@@ -117,8 +140,6 @@ public:
         }
 
     }
-
-
 
 
     // Sort by reversed order
