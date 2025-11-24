@@ -4,6 +4,7 @@
 #include "./class/math-expression.h"
 #include "./class/dic.h"
 #include "class/tree/tree.h"
+#include "class/tree/binary_tree_search.h"
 
 #define MAX_RAND_ELE 100'000
 // 100 million

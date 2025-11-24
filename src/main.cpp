@@ -76,6 +76,44 @@ int treeImplementation()
     return 0;
 }
 
+int bstImplementationTest()
+{
+    BSTree<std::string> tree;
+
+    try {
+        tree.loadFromFile("assets/int_long_file.txt");
+    }
+    catch (const std::exception& ex) {
+        std::cerr << "Failed to load tree: " << ex.what() << "\n";
+        return 1;
+    }
+
+    std::cout << "Tree loaded successfully.\n";
+    std::cout << "Current tree (in-order): " << tree << "\n";
+
+    // Search
+    const std::string probe = "example";
+    bool found = tree.search(probe);
+    std::cout << "search(\"" << probe << "\"): "
+              << (found ? "found" : "not found") << "\n";
+
+    // Insert
+    std::string newValue = "inserted-node";
+    std::cout << "Inserting \"" << newValue << "\"...\n";
+    tree.insert(newValue);
+
+    std::cout << "Tree after insert: " << tree << "\n";
+
+    // Delete
+    std::string toDelete = "delete-me";
+    std::cout << "Deleting \"" << toDelete << "\"...\n";
+    tree.remove(toDelete);
+
+    std::cout << "Tree after delete: " << tree << "\n";
+
+    return 0;
+}
+
 // -------------------------------------------------------------
 // Main Program
 // -------------------------------------------------------------
@@ -93,6 +131,8 @@ int main(int arc,  char* argv[])
         return adaptorClass();
     if(string(argv[1]) == "tree")
         return treeImplementation();
+    if(string(argv[1]) == "bs-tree")
+        return bstImplementationTest();
 
     return 0;
 }

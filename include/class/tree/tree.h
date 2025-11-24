@@ -20,7 +20,7 @@ private:
     T _value;
     TreeNode<T>* _left;
     TreeNode<T>* _right;
-    NodeColor color = BLACK;
+    NodeColor _color;
 
 public:
     // Constructors
@@ -30,6 +30,7 @@ public:
     // Accessors
     T getValue() const;
     void setValue(T val);
+    void setColor(NodeColor color);
 
     TreeNode<T>* getLeft() const;
     TreeNode<T>* getRight() const;
@@ -91,17 +92,20 @@ public:
 // Implementation of TreeNode
 // -----------------------------------------------------
 template <typename T>
-TreeNode<T>::TreeNode(T val) : _value(val), _left(nullptr), _right(nullptr) {}
+TreeNode<T>::TreeNode(T val) : _value(val), _left(nullptr), _right(nullptr),_color(RED) {}
 
 template <typename T>
 TreeNode<T>::TreeNode(T val, TreeNode<T>* left, TreeNode<T>* right)
-    : _value(val), _left(left), _right(right) {}
+    : _value(val), _left(left), _right(right),_color(RED) {}
 
 template <typename T>
 T TreeNode<T>::getValue() const { return _value; }
 
 template <typename T>
 void TreeNode<T>::setValue(T val) { _value = val; }
+
+template <typename T>
+void TreeNode<T>::setColor(NodeColor color) { _color = color; }
 
 template <typename T>
 TreeNode<T>* TreeNode<T>::getLeft() const { return _left; }
@@ -215,8 +219,13 @@ bool Tree<T>::isEmpty() const
 template <typename T>
 TreeNode<T>* Tree<T>::_find(TreeNode<T>* node, T value)
 {
+
     if (node == nullptr)
         return nullptr;
+    
+    // Set Node as treated
+    node->setColor(BLACK);
+    
     if (node->getValue() == value)
         return node;
 
