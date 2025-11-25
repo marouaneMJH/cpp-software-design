@@ -1,0 +1,273 @@
+In computer science, a hash table is a data structure that implements an associative array, also called a dictionary or simply map; an associative array is an abstract data type that maps keys to values.[3] A hash table uses a hash function to compute an index, also called a hash code, into an array of buckets or slots, from which the desired value can be found. During lookup, the key is hashed and the resulting hash indicates where the corresponding value is stored. A map implemented by a hash table is called a hash map.
+
+Most hash table designs employ an imperfect hash function. Hash collisions, where the hash function generates the same index for more than one key, therefore typically must be accommodated in some way. Common strategies to handle hash collisions include chaining, which stores multiple elements in the same slot using linked lists, and open addressing, which searches for the next available slot according to a probing sequence.[4]
+
+In a well-dimensioned hash table, the average time complexity for each lookup is independent of the number of elements stored in the table. Many hash table designs also allow arbitrary insertions and deletions of key–value pairs, at amortized constant average cost per operation.[5][4]: 513–558 [6]
+
+Hashing is an example of a space-time tradeoff. If memory is infinite, the entire key can be used directly as an index to locate its value with a single memory access. On the other hand, if infinite time is available, values can be stored without regard for their keys, and a binary search or linear search can be used to retrieve the element.[7]: 458 
+
+In many situations, hash tables turn out to be on average more efficient than search trees or any other table lookup structure. Hash tables are widely used in modern software systems for tasks such as database indexing, caching, and implementing associative arrays, due to their fast average-case performance.[8] For this reason, they are widely used in many kinds of computer software, particularly for associative arrays, database indexing, caches, and sets. Many programming languages provide built-in hash table structures, such as Python’s dictionaries, Java’s HashMap, and C++’s unordered_map, which abstract the complexity of hashing from the programmer.[9]
+
+History
+The idea of hashing arose independently in different places. In January 1953, Hans Peter Luhn wrote an internal IBM memorandum that used hashing with chaining. The first example of open addressing was proposed by A. D. Linh, building on Luhn's memorandum.[4]: 547  Around the same time, Gene Amdahl, Elaine M. McGraw, Nathaniel Rochester, and Arthur Samuel of IBM Research implemented hashing for the IBM 701 assembler.[10]: 124  Open addressing with linear probing is credited to Amdahl, although Andrey Ershov independently had the same idea.[10]: 124–125  The term "open addressing" was coined by W. Wesley Peterson in his article which discusses the problem of search in large files.[11]: 15 
+
+The first published work on hashing with chaining is credited to Arnold Dumey, who discussed the idea of using remainder modulo a prime as a hash function.[11]: 15  The word "hashing" was first published in an article by Robert Morris.[10]: 126  A theoretical analysis of linear probing was submitted originally by Konheim and Weiss.[11]: 15 
+
+Overview
+An associative array stores a set of (key, value) pairs and allows insertion, deletion, and lookup (search), with the constraint of unique keys. In the hash table implementation of associative arrays, an array 
+A
+{\displaystyle A} of length 
+m
+{\displaystyle m} is partially filled with 
+n
+{\displaystyle n} elements, where 
+m
+≥
+n
+{\displaystyle m\geq n}. A key 
+x
+{\displaystyle x} is hashed using a hash function 
+h
+{\displaystyle h} to compute an index location 
+A
+[
+h
+(
+x
+)
+]
+{\displaystyle A[h(x)]} in the hash table, where 
+h
+(
+x
+)
+<
+m
+{\displaystyle h(x)<m}. The efficiency of a hash table depends on the load factor, defined as the ratio of the number of stored elements to the number of available slots, with lower load factors generally yielding faster operations.[12] At this index, both the key and its associated value are stored. Storing the key alongside the value ensures that lookups can verify the key at the index to retrieve the correct value, even in the presence of collisions. Under reasonable assumptions, hash tables have better time complexity bounds on search, delete, and insert operations in comparison to self-balancing binary search trees.[11]: 1 
+
+Hash tables are also commonly used to implement sets, by omitting the stored value for each key and merely tracking whether the key is present.[11]: 1 
+
+Load factor
+A load factor 
+α
+{\displaystyle \alpha } is a critical statistic of a hash table, and is defined as follows:[2]
+load factor
+ 
+(
+α
+)
+=
+n
+m
+,
+{\displaystyle {\text{load factor}}\ (\alpha )={\frac {n}{m}},}where
+
+n
+{\displaystyle n} is the number of entries occupied in the hash table.
+m
+{\displaystyle m} is the number of buckets.
+The performance of the hash table deteriorates in relation to the load factor 
+α
+{\displaystyle \alpha }.[11]: 2  In the limit of large 
+m
+{\displaystyle m} and 
+n
+{\displaystyle n}, each bucket statistically has a Poisson distribution with expectation 
+λ
+=
+α
+{\displaystyle \lambda =\alpha } for an ideally random hash function.
+
+The software typically ensures that the load factor 
+α
+{\displaystyle \alpha } remains below a certain constant, 
+α
+max
+{\displaystyle \alpha _{\max }}. This helps maintain good performance. Therefore, a common approach is to resize or "rehash" the hash table whenever the load factor 
+α
+{\displaystyle \alpha } reaches 
+α
+max
+{\displaystyle \alpha _{\max }}. Similarly the table may also be resized if the load factor drops below 
+α
+max
+/
+4
+{\displaystyle \alpha _{\max }/4}.[13]
+
+Load factor for separate chaining
+With separate chaining hash tables, each slot of the bucket array stores a pointer to a list or array of data.[14]
+
+Separate chaining hash tables suffer gradually declining performance as the load factor grows, and no fixed point beyond which resizing is absolutely needed.[13]
+
+With separate chaining, the value of 
+α
+max
+{\displaystyle \alpha _{\max }} that gives best performance is typically between 1 and 3.[13]
+
+Load factor for open addressing
+With open addressing, each slot of the bucket array holds exactly one item. Therefore an open-addressed hash table cannot have a load factor greater than 1.[14]
+
+The performance of open addressing becomes very bad when the load factor approaches 1.[13]
+
+Therefore a hash table that uses open addressing must be resized or rehashed if the load factor 
+α
+{\displaystyle \alpha } approaches 1.[13]
+
+With open addressing, acceptable figures of max load factor 
+α
+max
+{\displaystyle \alpha _{\max }} should range around 0.6 to 0.75.[15][16]: 110 
+
+Hash function
+A hash function 
+h
+:
+U
+→
+{
+0
+,
+.
+.
+.
+,
+m
+−
+1
+}
+{\displaystyle h:U\rightarrow \{0,...,m-1\}} maps the universe 
+U
+{\displaystyle U} of keys to indices or slots within the table, that is, 
+h
+(
+x
+)
+∈
+{
+0
+,
+.
+.
+.
+,
+m
+−
+1
+}
+{\displaystyle h(x)\in \{0,...,m-1\}} for 
+x
+∈
+U
+{\displaystyle x\in U}. The conventional implementations of hash functions are based on the integer universe assumption that all elements of the table stem from the universe 
+U
+=
+{
+0
+,
+.
+.
+.
+,
+u
+−
+1
+}
+{\displaystyle U=\{0,...,u-1\}}, where the bit length of 
+u
+{\displaystyle u} is confined within the word size of a computer architecture.[11]: 2 
+
+A hash function 
+h
+{\displaystyle h} is said to be perfect for a given set 
+S
+{\displaystyle S} if it is injective on 
+S
+{\displaystyle S}, that is, if each element 
+x
+∈
+S
+{\displaystyle x\in S} maps to a different value in 
+0
+,
+.
+.
+.
+,
+m
+−
+1
+{\displaystyle {0,...,m-1}}.[17][18] A perfect hash function can be created if all the keys are known ahead of time.[17]
+
+Integer universe assumption
+The schemes of hashing used in integer universe assumption include hashing by division, hashing by multiplication, universal hashing, dynamic perfect hashing, and static perfect hashing.[11]: 2  However, hashing by division is the commonly used scheme.[19]: 264 [16]: 110 
+
+Hashing by division
+The scheme in hashing by division is as follows:[11]: 2 
+h
+(
+x
+)
+ 
+=
+ 
+x
+mod
+m
+,
+{\displaystyle h(x)\ =\ x\,{\bmod {\,}}m,}where 
+h
+(
+x
+)
+{\displaystyle h(x)} is the hash value of 
+x
+∈
+S
+{\displaystyle x\in S} and 
+m
+{\displaystyle m} is the size of the table.
+
+Hashing by multiplication
+The scheme in hashing by multiplication is as follows:[11]: 2–3 
+h
+(
+x
+)
+=
+⌊
+m
+(
+(
+x
+A
+)
+mod
+1
+)
+⌋
+{\displaystyle h(x)=\lfloor m{\bigl (}(xA){\bmod {1}}{\bigr )}\rfloor }Where 
+A
+{\displaystyle A} is a non-integer real-valued constant and 
+m
+{\displaystyle m} is the size of the table. An advantage of the hashing by multiplication is that the 
+m
+{\displaystyle m} is not critical.[11]: 2–3  Although any value 
+A
+{\displaystyle A} produces a hash function, Donald Knuth suggests using the golden ratio.[11]: 3 
+
+String hashing
+Commonly a string is used as a key to the hash function. Stroustrup[20] describes a simple hash function in which an unsigned integer that is initially zero is repeatedly left shifted one bit and then xor'ed with the integer value of the next character. This hash value is then taken modulo the table size. If the left shift is not circular, then the string length should be at least eight bits less than the size of the unsigned integer in bits. Another common way to hash a string to an integer is with a polynomial rolling hash function.
+
+Choosing a hash function
+Uniform distribution of the hash values is a fundamental requirement of a hash function. A non-uniform distribution increases the number of collisions and the cost of resolving them. Uniformity is sometimes difficult to ensure by design, but may be evaluated empirically using statistical tests, e.g., a Pearson's chi-squared test for discrete uniform distributions.[21][22]
+
+The distribution needs to be uniform only for table sizes that occur in the application. In particular, if one uses dynamic resizing with exact doubling and halving of the table size, then the hash function needs to be uniform only when the size is a power of two. Here the index can be computed as some range of bits of the hash function. On the other hand, some hashing algorithms prefer to have the size be a prime number.[23]
+
+For open addressing schemes, the hash function should also avoid clustering, the mapping of two or more keys to consecutive slots. Such clustering may cause the lookup cost to skyrocket, even if the load factor is low and collisions are infrequent. The popular multiplicative hash is claimed to have particularly poor clustering behavior.[23][4]
+
+K-independent hashing offers a way to prove a certain hash function does not have bad keysets for a given type of hashtable. A number of K-independence results are known for collision resolution schemes such as linear probing and cuckoo hashing. Since K-independence can prove a hash function works, one can then focus on finding the fastest possible such hash function.[24]
+
+Collision resolution
+See also: 2-choice hashing
+A search algorithm that uses hashing consists of two parts. The first part is computing a hash function which transforms the search key into an array index. The ideal case is such that no two search keys hash to the same array index. However, this is not always the case and impossible to guarantee for unseen given data.[4]: 515  Hence the second part of the algorithm is collision resolution. The two common methods for collision resolution are separate chaining and open addressing.[7]: 458  458 unique_word_1

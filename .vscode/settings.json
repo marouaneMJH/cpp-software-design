@@ -53,6 +53,11 @@
         "streambuf": "cpp",
         "text_encoding": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "fstream": "cpp",
+        "list": "cpp",
+        "chrono": "cpp",
+        "ratio": "cpp",
+        "iomanip": "cpp"
     }
 }

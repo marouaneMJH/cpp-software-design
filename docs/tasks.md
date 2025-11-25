@@ -1,7 +1,9 @@
--   [ ] Work on mathematical expression, check the validity of the it.
--   [ ] Add iterator to the stack.
--   [ ] What is AVL, can we implement it on stack.
--   [ ] What is ARB, can we implement it on stack.
--   [ ] NP and P problems
+-   [x] Work on mathematical expression, check the validity of the it.
+-   [X] Add iterator to the stack.
+-   [X] What is AVL, can we implement it on stack.
+-   [X] What is ARB, can we implement it on stack.
+-   [X] NP and P problems
 -   [ ]
--   [ ] Write the press release
+-   [X] hitorigen list
+-   [X] Add iterator to stack
+-   [X] Write the press release

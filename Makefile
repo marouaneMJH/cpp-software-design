@@ -35,9 +35,52 @@ run: $(TARGET)
 	@./$(TARGET) && echo "[+] Done running" || echo "[-] Runtime error"
 
 
-test: clean compile 
+main: 
+	@$(CXX) $(CXXFLAGS) -o build/main.exe src/main.cpp 
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./build/main.exe && echo && echo "[+] Test successful" || echo "[-] Test failed"
+	
+
+
+test: clean compile
 	@echo "[!] testing... "
-	@time ./$(TARGET) && echo "[+] Test successful" || echo "[-] Test failed"
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) main && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-adaptor: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) adaptor && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-iterator: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) iterator && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-h-list: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) h-list && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-math-expression: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) math-expression && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+
+test-tree: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) tree && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-bs-tree: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) bs-tree && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
+test-rb-tree: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) rb-tree && echo && echo "[+] Test successful" || echo "[-] Test failed"
 
 
 # Nettoyage

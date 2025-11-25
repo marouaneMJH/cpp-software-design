@@ -76,23 +76,15 @@ bool MathExpress::isValidMathExpression(string strExpression)
             continue;
         }
 
-        //  From now on, all the symbols are close ones.
+        //  From now on, all the symbols are closed ones.
 
         // No need to continues processing if the head is close it means the expression is unvalid.
         // Check the head of the stack if it close, the head should be always open symbol.
         if (_isCloseSymbol(symbolStack.getHead()))
             return false;
 
-        //
-        for (int i = 0; i < (int)openSymbols.size(); i++)
-        {
-
-            if (currentChar == closeSymbols[i])
-            {
-                symbolStack.pop();
-                break;
-            }
-        }
+        // Cancel the open symbol
+        symbolStack.pop();
     }
 
     return symbolStack.empty();
