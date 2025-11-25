@@ -11,6 +11,45 @@
 
 using namespace std::chrono;
 
+// -------------------------------------------------------------------------
+// Benchmark functions definitions (the implement exists after the main fn)
+// -------------------------------------------------------------------------
+int adaptorClass();
+
+int treeImplementation();
+
+int bstImplementationTest();
+
+int rbtImplementationTest();
+
+
+
+// -------------------------------------------------------------
+// Main Program
+// -------------------------------------------------------------
+int main(int arc,  char* argv[])
+{
+
+    // Todo: a time function to truck the time of execution of each functionality
+
+    if(string(argv[1]) == "adaptor")
+        return adaptorClass();
+    if(string(argv[1]) == "iterator")
+        return adaptorClass();
+    if(string(argv[1]) == "math-expression")
+        return adaptorClass();
+    if(string(argv[1]) == "tree")
+        return treeImplementation();
+    if(string(argv[1]) == "bs-tree")
+        return bstImplementationTest();
+    if(string(argv[1]) == "rb-tree")
+        return rbtImplementationTest();
+
+
+    printf("\nMake sure to add the tp name after the main (ex: ./build/main bs-tree)");
+
+    return 1;
+}
 
 int adaptorClass()
 {
@@ -40,7 +79,6 @@ int adaptorClass()
 
     return 0;
 }
-
 
 int treeImplementation()
 {
@@ -81,7 +119,7 @@ int bstImplementationTest()
     BSTree<std::string> tree;
 
     try {
-        tree.loadFromFile("assets/int_long_file.txt");
+        tree.loadFromFile("assets/mid_long_numbers.txt");
     }
     catch (const std::exception& ex) {
         std::cerr << "Failed to load tree: " << ex.what() << "\n";
@@ -114,25 +152,47 @@ int bstImplementationTest()
     return 0;
 }
 
-// -------------------------------------------------------------
-// Main Program
-// -------------------------------------------------------------
-int main(int arc,  char* argv[])
+int rbtImplementationTest()
 {
+    RBTree<int> tree;
+
+    // --- Load from file ---
+    Benchmark::run("RBTree::loadFromFile", [&]() {
+        size_t count = tree.loadFromFile("assets/big_int_numbers.txt");   // must contain integers
+        cout << count << " loaded items form given file \n" ;
+    });
+
+    // --- Insert test ---
+    Benchmark::run("RBTree::insert(42)", [&]() {
+        tree.insert(42);
+    });
+
+    // --- Search test ---
+    Benchmark::run("RBTree::search(42)", [&]() {
+        bool found = tree.search(42);
+        std::cout << "search(42) = " << (found ? "found" : "not found") << "\n";
+    });
+
+    // --- Search test ---
+    Benchmark::run("RBTree::search(41)", [&]() {
+        bool found = tree.search(41);
+        std::cout << "search(41) = " << (found ? "found" : "not found") << "\n";
+    });
+
+    // --- Remove test ---
+    Benchmark::run("RBTree::remove(42)", [&]() {
+        tree.remove(42);
+    });
+
+    // --- Search test ---
+    Benchmark::run("RBTree::search(42)", [&]() {
+        bool found = tree.search(42);
+        std::cout << "search(42) = " << (found ? "found" : "not found") << "\n";
+    });
 
 
-    // Todo: a time function to truck the time of execution of each functionality
-
-    if(string(argv[1]) == "adaptor")
-        return adaptorClass();
-    if(string(argv[1]) == "iterator")
-        return adaptorClass();
-    if(string(argv[1]) == "math-expression")
-        return adaptorClass();
-    if(string(argv[1]) == "tree")
-        return treeImplementation();
-    if(string(argv[1]) == "bs-tree")
-        return bstImplementationTest();
+    // --- Print full benchmark history ---
+    Benchmark::printHistory();
 
     return 0;
 }

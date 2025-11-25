@@ -5,8 +5,8 @@
 
 typedef enum
 {
-    RED,
-    BLACK
+    _RED,
+    _BLACK
 }NodeColor;
 
 
@@ -92,11 +92,11 @@ public:
 // Implementation of TreeNode
 // -----------------------------------------------------
 template <typename T>
-TreeNode<T>::TreeNode(T val) : _value(val), _left(nullptr), _right(nullptr),_color(RED) {}
+TreeNode<T>::TreeNode(T val) : _value(val), _left(nullptr), _right(nullptr),_color(_RED) {}
 
 template <typename T>
 TreeNode<T>::TreeNode(T val, TreeNode<T>* left, TreeNode<T>* right)
-    : _value(val), _left(left), _right(right),_color(RED) {}
+    : _value(val), _left(left), _right(right),_color(_RED) {}
 
 template <typename T>
 T TreeNode<T>::getValue() const { return _value; }
@@ -224,7 +224,7 @@ TreeNode<T>* Tree<T>::_find(TreeNode<T>* node, T value)
         return nullptr;
     
     // Set Node as treated
-    node->setColor(BLACK);
+    node->setColor(_BLACK);
     
     if (node->getValue() == value)
         return node;

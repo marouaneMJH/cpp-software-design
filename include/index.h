@@ -1,10 +1,21 @@
 #pragma once
+
+
+// ------------- Helpers -------------
+// todo: make index file export for the helpers classes
+#include "class/helpers/benchmark-helpers.h"
+
+
+// ------------- Classes -------------
+
 #include "./class/stack/index.h"
 #include "./class/lists/h-list.h"
 #include "./class/math-expression.h"
 #include "./class/dic.h"
+// todo: make index export file for tree classes
 #include "class/tree/tree.h"
 #include "class/tree/binary_tree_search.h"
+#include "class/tree/red_black_tree.h"
 
 #define MAX_RAND_ELE 100'000
 // 100 million

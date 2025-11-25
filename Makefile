@@ -77,6 +77,11 @@ test-bs-tree: clean compile
 	@echo ;
 	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) bs-tree && echo && echo "[+] Test successful" || echo "[-] Test failed"
 
+test-rb-tree: clean compile
+	@echo "[!] testing... "
+	@echo ;
+	@/usr/bin/time -f "Time: %E | Memory: %M KB | CPU: %P" ./$(TARGET) rb-tree && echo && echo "[+] Test successful" || echo "[-] Test failed"
+
 
 # Nettoyage
 clean:
