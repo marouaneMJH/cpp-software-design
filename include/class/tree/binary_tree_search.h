@@ -43,7 +43,7 @@ public:
     bool search(const T& value) const;
 
     // IO
-    void loadFromFile(const std::string& fileName);
+    size_t loadFromFile(const std::string& fileName);
     void print(std::ostream& os) const;
 
     // Operator overload

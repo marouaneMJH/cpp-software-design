@@ -172,7 +172,7 @@ std::ostream& operator<<(std::ostream& os, const BSTree<T>& tree)
 }
 
 template <class T>
-void BSTree<T>::loadFromFile(const std::string& fileName)
+size_t BSTree<T>::loadFromFile(const std::string& fileName)
 {
     std::ifstream in(fileName.c_str());
     if (!in.is_open()) {
@@ -180,9 +180,12 @@ void BSTree<T>::loadFromFile(const std::string& fileName)
     }
 
     T value;
+    size_t count =0 ;
     while (in >> value) {
         insert(value);
+        ++count;
     }
 
     in.close();
+    return count;
 }

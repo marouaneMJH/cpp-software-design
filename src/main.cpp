@@ -53,26 +53,22 @@ int main(int arc,  char* argv[])
 
 int adaptorClass()
 {
-
     Dic dic;
     std::vector<std::string> topWords;
 
     dic.readFromFile("assets/long-file.txt");
 
     // Measure time to build priority queue from vector
-    auto start = high_resolution_clock::now();
-    auto pq = DataStructureUtils::vectorToPriorityQueue<std::string>(dic.getDic());
-    auto end = high_resolution_clock::now();
-    auto buildMs = duration_cast<milliseconds>(end - start).count();
-    std::cout << "vectorToPriorityQueue() took " << buildMs << " ms\n";
+    decltype(DataStructureUtils::vectorToPriorityQueue<std::string>(dic.getDic())) pq;
+    Benchmark::run("vectorToPriorityQueue", [&]() {
+        pq = DataStructureUtils::vectorToPriorityQueue<std::string>(dic.getDic());
+    });
 
     // Extract top-K elements
     const std::size_t k = 2;
-    start = high_resolution_clock::now();
-    topWords = DataStructureUtils::getTopK(pq, k); // pq is consumed here
-    end = high_resolution_clock::now();
-    auto extractMs = duration_cast<milliseconds>(end - start).count();
-    std::cout << "getTopK(pq, " << k << ") executed in " << extractMs << " ms\n";
+    Benchmark::run("getTopK", [&]() {
+        topWords = DataStructureUtils::getTopK(pq, k); // pq is consumed here
+    });
 
     std::cout << "The top " << k << " greatest word(s) in the file are: ";
     DataStructureUtils::printVector(topWords);
@@ -80,11 +76,15 @@ int adaptorClass()
     return 0;
 }
 
+// ---------- treeImplementation ----------
 int treeImplementation()
 {
-    Tree<string>* t;
+    Tree<std::string>* t = nullptr;
 
-    t  = Dic::loadFileToTree("assets/test.txt");
+    // Load into tree (benchmarked)
+    Benchmark::run("Dic::loadFileToTree", [&]() {
+        t = Dic::loadFileToTree("assets/test.txt");
+    });
 
     if (!t) {
         std::cerr << "Failed to load tree\n";
@@ -99,14 +99,20 @@ int treeImplementation()
 
     t->addChild("inserted-node");
 
-    std::cout << "\nprintPreOrder():\n";
-    t->printPreOrder();
+    Benchmark::run("printPreOrder", [&]() {
+        std::cout << "\nprintPreOrder():\n";
+        t->printPreOrder();
+    });
 
-    std::cout << "\nprintPostOrder():\n";
-    t->printPostOrder();
+    Benchmark::run("printPostOrder", [&]() {
+        std::cout << "\nprintPostOrder():\n";
+        t->printPostOrder();
+    });
 
-    std::cout << "\nprintLevelOrder():\n";
-    t->printLevelOrder();
+    Benchmark::run("printLevelOrder", [&]() {
+        std::cout << "\nprintLevelOrder():\n";
+        t->printLevelOrder();
+    });
 
     std::cout << "\ncountNodes(): " << t->countNodes() << '\n';
     std::cout << "getHeight(): " << t->getHeight() << '\n';
@@ -114,12 +120,17 @@ int treeImplementation()
     return 0;
 }
 
+// ---------- bstImplementationTest ----------
 int bstImplementationTest()
 {
-    BSTree<std::string> tree;
+    BSTree<long int> tree;
 
     try {
-        tree.loadFromFile("assets/mid_long_numbers.txt");
+        Benchmark::run("BSTree::loadFromFile", [&]() {
+            size_t count = tree.loadFromFile("assets/big_int_numbers.txt");
+            cout << count << " loaded items form given file \n" ;
+
+        });
     }
     catch (const std::exception& ex) {
         std::cerr << "Failed to load tree: " << ex.what() << "\n";
@@ -127,31 +138,45 @@ int bstImplementationTest()
     }
 
     std::cout << "Tree loaded successfully.\n";
-    std::cout << "Current tree (in-order): " << tree << "\n";
+    // std::cout << "Current tree (in-order): " << tree << "\n";
+
+
+        // Insert
+    int newValue = 21;
+    std::cout << "Inserting \"" << newValue << "\"...\n";
+    Benchmark::run("BSTree::insert", [&]() {
+        tree.insert(newValue);
+    });
 
     // Search
-    const std::string probe = "example";
-    bool found = tree.search(probe);
-    std::cout << "search(\"" << probe << "\"): "
-              << (found ? "found" : "not found") << "\n";
+    const int probe = 42;
+    bool found = false;
+    Benchmark::run("BSTree::search", [&]() {
+        found = tree.search(probe);
+    });
+    std::cout << "search(\"" << probe << "\"): " << (found ? "found" : "not found") << "\n";
 
-    // Insert
-    std::string newValue = "inserted-node";
-    std::cout << "Inserting \"" << newValue << "\"...\n";
-    tree.insert(newValue);
-
-    std::cout << "Tree after insert: " << tree << "\n";
-
-    // Delete
-    std::string toDelete = "delete-me";
+        // Delete
+    int  toDelete = 21;
     std::cout << "Deleting \"" << toDelete << "\"...\n";
-    tree.remove(toDelete);
+    bool removed = false;
+    Benchmark::run("BSTree::remove", [&]() {
+        removed = (void(), tree.remove(toDelete), true); // keep remove behavior; capture result if needed
+    });
 
-    std::cout << "Tree after delete: " << tree << "\n";
+
+    // Search
+    Benchmark::run("BSTree::search", [&]() {
+        found = tree.search(probe);
+    });
+    std::cout << "search(\"" << probe << "\"): " << (found ? "found" : "not found") << "\n";
+
+    Benchmark::printHistory();
+
+
 
     return 0;
 }
-
 int rbtImplementationTest()
 {
     RBTree<int> tree;
