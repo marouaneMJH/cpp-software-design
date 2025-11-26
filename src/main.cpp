@@ -51,6 +51,7 @@ int main(int arc,  char* argv[])
     return 1;
 }
 
+// ---------- treeImplementation ----------
 int adaptorClass()
 {
     Dic dic;
@@ -76,7 +77,6 @@ int adaptorClass()
     return 0;
 }
 
-// ---------- treeImplementation ----------
 int treeImplementation()
 {
     Tree<std::string>* t = nullptr;
@@ -188,14 +188,22 @@ int rbtImplementationTest()
     });
 
     // --- Insert test ---
-    Benchmark::run("RBTree::insert(42)", [&]() {
-        tree.insert(42);
+    Benchmark::run("RBTree::insert(k*13) k <= 1'000'000 ", [&]() {
+
+        for(int i=0;i<MAX_ELE;i++)
+        {
+            tree.insert(i*13);
+        }
     });
 
     // --- Search test ---
-    Benchmark::run("RBTree::search(42)", [&]() {
-        bool found = tree.search(42);
-        std::cout << "search(42) = " << (found ? "found" : "not found") << "\n";
+    Benchmark::run("RBTree::search(k*13) k <= 1'000'000 ", [&]() {
+
+        for(int i=0;i<100'000;i++)
+        {
+            bool found = tree.search(13*i);
+            std::cout << "search("<<i*13<<") = " << (found ? "found" : "not found") << "\n";
+        }
     });
 
     // --- Search test ---
@@ -205,8 +213,11 @@ int rbtImplementationTest()
     });
 
     // --- Remove test ---
-    Benchmark::run("RBTree::remove(42)", [&]() {
-        tree.remove(42);
+    Benchmark::run("RBTree::remove(13*k) k <= 1'000'000 ", [&]() {
+        for(int i=0;i<100'000;i++)
+        {
+            tree.remove(13*i);
+        }
     });
 
     // --- Search test ---
