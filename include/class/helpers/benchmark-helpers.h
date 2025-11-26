@@ -3,7 +3,7 @@
 #include <vector>
 #include <functional>
 #include <chrono>
-
+#include "../../shared/insi-colors.h"
 class Benchmark
 {
 public:
