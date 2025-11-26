@@ -17,7 +17,7 @@ void RBTTree::destroy(RBTNode *node) {
 
 // ===================== INSERT =====================
 
-void RBTTree::insert(int key) {
+void RBTTree::insert(const std::string &key) {
     RBTNode *z = new RBTNode(key);
 
     RBTNode *y = nullptr;
@@ -44,7 +44,7 @@ void RBTTree::insert(int key) {
 
 // ===================== SEARCH =====================
 
-RBTNode* RBTTree::search(int key) const {
+RBTNode* RBTTree::search(const std::string &key) const {
     RBTNode *x = root;
     while (x != nullptr) {
         if (key == x->key) return x;
@@ -55,6 +55,27 @@ RBTNode* RBTTree::search(int key) const {
     }
     return nullptr;
 }
+
+// ===================== BREADTH FIRST =====================
+
+void RBTTree::breadthFirst() const {
+    if (root == nullptr) {
+        return; // arbre vide
+    }
+
+    std::queue<RBTNode*> q;
+    q.push(root);
+
+    while (!q.empty()) {
+        RBTNode *node = q.front();
+        q.pop();
+
+
+        if (node->left  != nullptr) q.push(node->left);
+        if (node->right != nullptr) q.push(node->right);
+    }
+}
+
 
 // ===================== INORDER =====================
 

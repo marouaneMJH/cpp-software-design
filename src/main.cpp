@@ -1,94 +1,77 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <cctype>
 #include <chrono>
-#include "./../include/class/binary-search-tree/BST.hpp"
+ #include "../include/class/red-black-tree/rbt_tree.h"
 
-static inline std::string normalize_token(std::string s) {
-    for (char& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
-    auto is_punct = [](char c){
-        return !std::isalnum(static_cast<unsigned char>(c)) && c != '\'' && c != '-';
-    };
-    std::size_t i = 0; while (i < s.size() && is_punct(s[i])) ++i;
-    std::size_t j = s.size(); while (j > i && is_punct(s[j-1])) --j;
-    s = s.substr(i, j - i);
-    std::string out; out.reserve(s.size());
-    for (char c : s) if (std::isalnum(static_cast<unsigned char>(c)) || c=='\'' || c=='-') out.push_back(c);
-    return out;
-}
+int main(int argc, char* argv[]) {
 
-int main(int argc, char** argv) {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
+    std::string filename = "assets/file.txt";
+    if (argc >= 2) {
+        filename = argv[1];
+    }
 
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <./assets/file.txt>\n";
+    // Measure total time
+    auto start_total = std::chrono::high_resolution_clock::now();
+
+    // ============================================================
+    // 1) Lire le fichier
+    // ============================================================
+
+    auto start_read = std::chrono::high_resolution_clock::now();
+
+    std::ifstream fin(filename);
+    if (!fin) {
+        std::cerr << "Error: cannot open " << filename << "\n";
         return 1;
     }
 
-    const std::string path = argv[1];
-    std::ifstream in(path);
-    if (!in) {
-        std::cerr << "Error: cannot open file: " << path << "\n";
-        return 1;
+    long long count = 0;
+    std::string token;
+
+    RBTTree tree;
+
+    while (fin >> token) {
+        tree.insert(token);
+        ++count;
     }
 
-    BST tree;
-    std::string tok;
-    std::size_t raw = 0, kept = 0;
+    fin.close();
 
-    using clock = std::chrono::steady_clock;
+    auto end_read = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_read = end_read - start_read;
 
-    // --- Insert phase timing ---
-    auto t0 = clock::now();
-    while (in >> tok) {
-        ++raw;
-        std::string w = normalize_token(tok);
-        if (!w.empty()) {
-            tree.insert(w);
-            ++kept;
-        }
-    }
-    auto t1 = clock::now();
 
-    // --- BFS phase timing ---
-    auto t2 = clock::now();
-    std::size_t turned = tree.bfs_colorize_to_green();
-    auto t3 = clock::now();
+    // ============================================================
+    // 2) BFS silencieux
+    // ============================================================
 
-    // Durations (ms)
-    double insert_ms = std::chrono::duration<double, std::milli>(t1 - t0).count();
-    double bfs_ms    = std::chrono::duration<double, std::milli>(t3 - t2).count();
+    auto start_bfs = std::chrono::high_resolution_clock::now();
 
-    // Human-readable
-    std::cout << "File tokens read: " << raw << "\n";
-    std::cout << "Normalized non-empty tokens inserted/updated: " << kept << "\n";
-    std::cout << "Unique nodes (unique words) in BST: " << tree.size() << "\n";
-    std::cout << "BFS done. Nodes turned green: " << turned
-              << " | All green? " << (tree.all_green() ? "yes" : "no") << "\n";
-    std::cout << "Insert time (ms): " << insert_ms << "\n";
-    std::cout << "BFS time (ms): " << bfs_ms << "\n";
+    tree.breadthFirst();   // silencieux
 
-    // CSV (single line) — easy to append to results.csv
-    #if defined(_MSC_VER)
-      const char* compiler = "MSVC";
-    #elif defined(__clang__)
-      const char* compiler = "Clang";
-    #elif defined(__GNUC__)
-      const char* compiler = "GCC";
-    #else
-      const char* compiler = "Unknown";
-    #endif
+    auto end_bfs = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_bfs = end_bfs - start_bfs;
 
-    std::cout << "RUN,Insert_ms = " << insert_ms
-              << "\n BFS_ms = " << bfs_ms
-              << "\n Tokens = " << raw
-              << "\n Kept = " << kept
-              << "\n Unique = " << tree.size()
-              << "\n Compiler = " << compiler
-              << "\n Build = Release"
-              << "\n";
+
+    // ============================================================
+    // 3) Temps total
+    // ============================================================
+
+    auto end_total = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> time_total = end_total - start_total;
+
+
+    // ============================================================
+    // 4) Résultats
+    // ============================================================
+
+    std::cout << "\n--- Resultats du programme ---\n";
+    std::cout << "Tokens lus        : " << count << "\n";
+    std::cout << "Temps de lecture + insertion : " << time_read.count() << " sec\n";
+    std::cout << "Temps BFS silencieux        : " << time_bfs.count() << " sec\n";
+    std::cout << "Temps total programme        : " << time_total.count() << " sec\n";
+    std::cout << "---------------------------------\n";
 
     return 0;
 }
