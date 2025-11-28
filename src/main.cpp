@@ -1,13 +1,6 @@
 #include "../include/index.h"
+#include "../include/benchmarks/index.h"
 
-#include <iostream>
-#include <stack>
-#include <queue>
-#include <vector>
-#include <random>
-#include <algorithm>
-#include <chrono>
-#include "./../include/class/data-structur.utils.h"
 
 using namespace std::chrono;
 
@@ -22,7 +15,15 @@ int bstImplementationTest();
 
 int rbtImplementationTest();
 
+// todo: bnenchmark functionality compares between rb-tree, bs-tree, set, map
 
+/**
+ * benchmark for rb,set,map,bs with:
+ * - insertion (loading a random numbers from a file)
+ * -  insertion sorted numbers
+ * - deleting the sorted numbers
+ * - search for all the sorted numbers
+*/
 
 // -------------------------------------------------------------
 // Main Program
@@ -44,7 +45,8 @@ int main(int arc,  char* argv[])
         return bstImplementationTest();
     if(string(argv[1]) == "rb-tree")
         return rbtImplementationTest();
-
+    if(string(argv[1]) == "ben-rb-bs-map-set")
+        return BenchmarkRbBsMapSet::compareBenchmarkRbBsMapSet();
 
     printf("\nMake sure to add the tp name after the main (ex: ./build/main bs-tree)");
 
@@ -177,6 +179,7 @@ int bstImplementationTest()
 
     return 0;
 }
+
 int rbtImplementationTest()
 {
     cout << RED << "MAX_ELE: " << YELLOW << MAX_ELE << endl;
@@ -318,10 +321,94 @@ int rbtImplementationTest()
     Benchmark::clearHistory();
 }
 
+// --- std::map<long int, long int> ---
+{
+    std::map<long int, int> orderedMap;
+
+    // --- Load from file ---
+    Benchmark::run("Map::loadFromFile", [&]() {
+        orderedMap = DataStructureUtils::mapLoadFromFile<long int,int>("assets/big_int_numbers.txt");
+        std::cout << orderedMap.size() << " loaded items from given file\n";
+    });
+
+    // --- Insert test ---
+    Benchmark::run("Map::insert(k*13) k <= MAX_ELE", [&]() {
+        for (int i = 0; i < MAX_ELE; ++i) {
+            long int key = static_cast<long int>(i) * 13L;
+            orderedMap[key] = key;
+        }
+    });
+
+    // --- Search test (batch, summary) ---
+    Benchmark::run("Map::search(k*13) k <= MAX_ELE (summary)", [&]() {
+        int foundCount = 0;
+        for (int i = 0; i < MAX_ELE; ++i) {
+            long int key = static_cast<long int>(i) * 13L;
+            if (orderedMap.find(key) != orderedMap.end()) ++foundCount;
+        }
+        std::cout << "Map: found " << foundCount << " / " << MAX_ELE << " searched keys\n";
+    });
 
 
-    // set
-    // sorted BST
+    // --- Remove test ---
+    Benchmark::run("Map::remove(13*k) k <= MAX_ELE", [&]() {
+        for (int i = 0; i < MAX_ELE; ++i) {
+            long int key = static_cast<long int>(i) * 13L;
+            orderedMap.erase(key);
+        }
+    });
+
+    Benchmark::printHistory();
+    Benchmark::clearHistory();
+}
+
+
+// --- BSTree<long int> ---
+{
+    BSTree<long int> tree;
+
+
+    // --- Load from file ---
+    Benchmark::run("BSTree::loadFromFile", [&]() {
+        size_t count = tree.loadFromFile("assets/big_int_numbers.txt"); // must contain integers
+        std::cout << count << " loaded items from given file\n";
+    });
+
+    // --- Insert test ---
+    Benchmark::run("BSTree::insert(k*13) k <= MAX_ELE", [&]() {
+        for (int i = 0; i < MAX_ELE; ++i) {
+            tree.insert(static_cast<long int>(i) * 13L);
+        }
+    });
+
+    // --- Search test (batch, summary) ---
+    Benchmark::run("BSTree::search(k*13) k <= MAX_ELE (summary)", [&]() {
+        int foundCount = 0;
+        for (int i = 0; i < MAX_ELE; ++i) {
+            if (tree.search(static_cast<long int>(i) * 13L)) ++foundCount;
+        }
+        std::cout << "BSTree: found " << foundCount << " / " << MAX_ELE << " searched keys\n";
+    });
+
+    // --- Single search checks ---
+    Benchmark::run("BSTree::search(41)", [&]() {
+        bool found = tree.search(41L);
+        std::cout << "search(41) = " << (found ? "found" : "not found") << "\n";
+    });
+
+    // --- Remove test ---
+    Benchmark::run("BSTree::remove(13*k) k <= MAX_ELE", [&]() {
+        for (int i = 0; i < MAX_ELE; ++i) {
+            tree.remove(static_cast<long int>(i) * 13L);
+        }
+    });
+
+
+    Benchmark::printHistory();
+    Benchmark::clearHistory();
+}
+
+
 
     return 0;
 }
