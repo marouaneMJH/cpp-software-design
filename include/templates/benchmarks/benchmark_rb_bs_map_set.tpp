@@ -1,301 +1,200 @@
 #include "../../benchmarks/benchmark_rb_bs_map_set.h"
 
-
-// assume MAX_ELE is defined somewhere globally
 #ifndef MAX_ELE
 #define MAX_ELE 1000000
 #endif
 
-// Implementation
-
 void BenchmarkRbBsMapSet::printHeader(const std::string& title) {
-    std::cout << "========== " << title << " ==========\n";
+    std::cout << "===== " << title << " =====\n";
 }
 
+/* RBTree<int> */
 void BenchmarkRbBsMapSet::benchRBTree() {
     printHeader("RBTree<int>");
-
     RBTree<int> tree;
 
-    // Load
+    // load
     Benchmark::run("RBTree::loadFromFile", [&]() {
         size_t count = tree.loadFromFile("assets/big_int_numbers.txt");
-        std::cout << count << " loaded items from given file\n";
+        std::cout << count << " loaded items into RBTree\n";
     });
 
-    // Insert
+    // insert
     Benchmark::run("RBTree::insert(k*13) k <= MAX_ELE", [&]() {
-        for (int i = 0; i < MAX_ELE; ++i) {
-            tree.insert(i * 13);
-        }
+        for (int i = 0; i < MAX_ELE; ++i) tree.insert(i * 13);
     });
 
-    // Search summary
-    Benchmark::run("RBTree::search(k*13) k <= MAX_ELE (summary)", [&]() {
-        int foundCount = 0;
-        for (int i = 0; i < MAX_ELE; ++i) {
-            if (tree.search(i * 13)) ++foundCount;
-        }
-        std::cout << "RBTree: found " << foundCount << " / " << MAX_ELE << " searched keys\n";
+    // search (summary)
+    Benchmark::run("RBTree::search(k*13) k <= MAX_ELE", [&]() {
+        size_t foundCount = 0;
+        for (int i = 0; i < MAX_ELE; ++i) if (tree.search(i * 13)) ++foundCount;
+        std::cout << "RBTree: found " << foundCount << " / " << MAX_ELE << "\n";
     });
 
-    // Single search
-    Benchmark::run("RBTree::search(41)", [&]() {
-        bool found = tree.search(41);
-        std::cout << "search(41) = " << (found ? "found" : "not found") << "\n";
-    });
-
-    // Remove
+    // remove
     Benchmark::run("RBTree::remove(13*k) k <= MAX_ELE", [&]() {
-        for (int i = 0; i < MAX_ELE; ++i) {
-            tree.remove(i * 13);
-        }
-    });
-
-    // Search after removals
-    Benchmark::run("RBTree::search(42) after removals", [&]() {
-        bool found = tree.search(42);
-        std::cout << "search(42) = " << (found ? "found" : "not found") << "\n";
+        for (int i = 0; i < MAX_ELE; ++i) tree.remove(i * 13);
     });
 
     Benchmark::printHistory();
     Benchmark::clearHistory();
 }
 
+/* std::unordered_set<int> */
 void BenchmarkRbBsMapSet::benchUnorderedSet() {
     printHeader("std::unordered_set<int>");
+    std::unordered_set<int> uset;
 
-    std::unordered_set<int> unorderedSet;
-
-    // Load
+    // load
     Benchmark::run("UnorderedSet::loadFromFile", [&]() {
-        try {
-            unorderedSet = DataStructureUtils::unorderedSetLoadFromFile<int>("assets/big_int_numbers.txt");
-            std::cout << unorderedSet.size() << " loaded items into unordered_set\n";
-        } catch (const std::exception& ex) {
-            std::cerr << "UnorderedSet load failed: " << ex.what() << "\n";
-            throw;
-        }
+        uset = DataStructureUtils::unorderedSetLoadFromFile<int>("assets/big_int_numbers.txt");
+        std::cout << uset.size() << " loaded items into unordered_set\n";
     });
 
-    // Insert
+    // insert
     Benchmark::run("UnorderedSet::insert(k*13) k <= MAX_ELE", [&]() {
-        for (int i = 0; i < MAX_ELE; ++i) {
-            unorderedSet.insert(i * 13);
-        }
+        for (int i = 0; i < MAX_ELE; ++i) uset.insert(i * 13);
     });
 
-    // Search summary
-    Benchmark::run("UnorderedSet::search(k*13) k <= MAX_ELE (summary)", [&]() {
-        int foundCount = 0;
-        for (int i = 0; i < MAX_ELE; ++i) {
-            if (unorderedSet.find(i * 13) != unorderedSet.end()) ++foundCount;
-        }
-        std::cout << "unordered_set: found " << foundCount << " / " << MAX_ELE << " searched keys\n";
+    // search
+    Benchmark::run("UnorderedSet::search(k*13) k <= MAX_ELE", [&]() {
+        size_t foundCount = 0;
+        for (int i = 0; i < MAX_ELE; ++i) if (uset.find(i * 13) != uset.end()) ++foundCount;
+        std::cout << "unordered_set: found " << foundCount << " / " << MAX_ELE << "\n";
     });
 
-    // Single search
-    Benchmark::run("UnorderedSet::search(41)", [&]() {
-        bool found = (unorderedSet.find(41) != unorderedSet.end());
-        std::cout << "search(41) = " << (found ? "found" : "not found") << "\n";
-    });
-
-    // Remove
+    // remove
     Benchmark::run("UnorderedSet::remove(13*k) k <= MAX_ELE", [&]() {
-        for (int i = 0; i < MAX_ELE; ++i) {
-            unorderedSet.erase(i * 13);
-        }
-    });
-
-    // Search after removals
-    Benchmark::run("UnorderedSet::search(42) after removals", [&]() {
-        bool found = (unorderedSet.find(42) != unorderedSet.end());
-        std::cout << "search(42) = " << (found ? "found" : "not found") << "\n";
+        for (int i = 0; i < MAX_ELE; ++i) uset.erase(i * 13);
     });
 
     Benchmark::printHistory();
     Benchmark::clearHistory();
 }
 
+/* std::set<int> */
 void BenchmarkRbBsMapSet::benchSet() {
     printHeader("std::set<int>");
+    std::set<int> oset;
 
-    std::set<int> orderedSet;
-
-    // Load
+    // load
     Benchmark::run("Set::loadFromFile", [&]() {
-        try {
-            orderedSet = DataStructureUtils::setLoadFromFile<int>("assets/big_int_numbers.txt");
-            std::cout << orderedSet.size() << " loaded items into std::set\n";
-        } catch (const std::exception& ex) {
-            std::cerr << "Set load failed: " << ex.what() << "\n";
-            throw;
-        }
+        oset = DataStructureUtils::setLoadFromFile<int>("assets/big_int_numbers.txt");
+        std::cout << oset.size() << " loaded items into std::set\n";
     });
 
-    // Insert
+    // insert
     Benchmark::run("Set::insert(k*13) k <= MAX_ELE", [&]() {
-        for (int i = 0; i < MAX_ELE; ++i) {
-            orderedSet.insert(i * 13);
-        }
+        for (int i = 0; i < MAX_ELE; ++i) oset.insert(i * 13);
     });
 
-    // Search summary
-    Benchmark::run("Set::search(k*13) k <= MAX_ELE (summary)", [&]() {
-        int foundCount = 0;
-        for (int i = 0; i < MAX_ELE; ++i) {
-            if (orderedSet.find(i * 13) != orderedSet.end()) ++foundCount;
-        }
-        std::cout << "std::set: found " << foundCount << " / " << MAX_ELE << " searched keys\n";
+    // search
+    Benchmark::run("Set::search(k*13) k <= MAX_ELE", [&]() {
+        size_t foundCount = 0;
+        for (int i = 0; i < MAX_ELE; ++i) if (oset.find(i * 13) != oset.end()) ++foundCount;
+        std::cout << "std::set: found " << foundCount << " / " << MAX_ELE << "\n";
     });
 
-    // Single search
-    Benchmark::run("Set::search(41)", [&]() {
-        bool found = (orderedSet.find(41) != orderedSet.end());
-        std::cout << "search(41) = " << (found ? "found" : "not found") << "\n";
-    });
-
-    // Remove
+    // remove
     Benchmark::run("Set::remove(13*k) k <= MAX_ELE", [&]() {
-        for (int i = 0; i < MAX_ELE; ++i) {
-            orderedSet.erase(i * 13);
-        }
-    });
-
-    // Search after removals
-    Benchmark::run("Set::search(42) after removals", [&]() {
-        bool found = (orderedSet.find(42) != orderedSet.end());
-        std::cout << "search(42) = " << (found ? "found" : "not found") << "\n";
+        for (int i = 0; i < MAX_ELE; ++i) oset.erase(i * 13);
     });
 
     Benchmark::printHistory();
     Benchmark::clearHistory();
 }
 
+/* std::map<long int,long int> */
 void BenchmarkRbBsMapSet::benchMap() {
-    printHeader("std::map<long int, long int>");
+    printHeader("std::map<long int,int>");
+    std::map<long int, int> omap;
 
-    std::map<long int, long int> orderedMap;
-
-    // Load
+    // load
     Benchmark::run("Map::loadFromFile", [&]() {
-        try {
-            orderedMap = DataStructureUtils::mapLoadFromFile<long int, long int>("assets/big_int_numbers.txt");
-            std::cout << orderedMap.size() << " loaded items from given file\n";
-        } catch (const std::exception& ex) {
-            std::cerr << "Map load failed: " << ex.what() << "\n";
-            throw;
-        }
+        omap = DataStructureUtils::mapLoadFromFile<long int, int>("assets/big_int_numbers.txt");
+        std::cout << omap.size() << " loaded items into std::map\n";
     });
 
-    // Insert
+    // insert
     Benchmark::run("Map::insert(k*13) k <= MAX_ELE", [&]() {
         for (int i = 0; i < MAX_ELE; ++i) {
-            long int key = static_cast<long int>(i) * 13L;
-            orderedMap[key] = key;
+            long int key = i* 13;
+            omap[key] = key;
         }
     });
 
-    // Search summary
-    Benchmark::run("Map::search(k*13) k <= MAX_ELE (summary)", [&]() {
-        int foundCount = 0;
+    // search
+    Benchmark::run("Map::search(k*13) k <= MAX_ELE", [&]() {
+        size_t foundCount = 0;
         for (int i = 0; i < MAX_ELE; ++i) {
-            long int key = static_cast<long int>(i) * 13L;
-            if (orderedMap.find(key) != orderedMap.end()) ++foundCount;
+            long int key = i* 13;
+            if (omap.find(key) != omap.end()) ++foundCount;
         }
-        std::cout << "Map: found " << foundCount << " / " << MAX_ELE << " searched keys\n";
+        std::cout << "std::map: found " << foundCount << " / " << MAX_ELE << "\n";
     });
 
-    // Single search
-    Benchmark::run("Map::search(41)", [&]() {
-        bool found = (orderedMap.find(41L) != orderedMap.end());
-        std::cout << "search(41) = " << (found ? "found" : "not found") << "\n";
-    });
-
-    // Remove
+    // remove
     Benchmark::run("Map::remove(13*k) k <= MAX_ELE", [&]() {
-        for (int i = 0; i < MAX_ELE; ++i) {
-            long int key = static_cast<long int>(i) * 13L;
-            orderedMap.erase(key);
-        }
-    });
-
-    // Search after removals
-    Benchmark::run("Map::search(42) after removals", [&]() {
-        bool found = (orderedMap.find(42L) != orderedMap.end());
-        std::cout << "search(42) = " << (found ? "found" : "not found") << "\n";
+        for (int i = 0; i < MAX_ELE; ++i) omap.erase( i* 13);
     });
 
     Benchmark::printHistory();
     Benchmark::clearHistory();
 }
 
+/* BSTree<long int> */
 void BenchmarkRbBsMapSet::benchBSTree() {
-    printHeader("BSTree<long int>");
+    printHeader("BSTree<int>");
+    BSTree<int> tree;
 
-    BSTree<long int> tree;
-
-    // Load
+    // load
     Benchmark::run("BSTree::loadFromFile", [&]() {
         size_t count = tree.loadFromFile("assets/big_int_numbers.txt");
-        std::cout << count << " loaded items from given file\n";
+        std::cout << count << " loaded items into BSTree\n";
     });
 
-    // Insert
+    // insert
     Benchmark::run("BSTree::insert(k*13) k <= MAX_ELE", [&]() {
-        for (int i = 0; i < MAX_ELE; ++i) {
-            tree.insert(static_cast<long int>(i) * 13L);
+        try {
+            for (int i = 0; i < MAX_ELE; ++i) tree.insert(i * 13);
+        } catch (const std::exception& err) {
+            std::cerr << err.what() << "\n";
         }
+        
     });
 
-    // Search summary
-    Benchmark::run("BSTree::search(k*13) k <= MAX_ELE (summary)", [&]() {
-        int foundCount = 0;
-        for (int i = 0; i < MAX_ELE; ++i) {
-            if (tree.search(static_cast<long int>(i) * 13L)) ++foundCount;
-        }
-        std::cout << "BSTree: found " << foundCount << " / " << MAX_ELE << " searched keys\n";
+    // search
+    Benchmark::run("BSTree::search(k*13) k <= MAX_ELE", [&]() {
+        size_t foundCount = 0;
+        for (int i = 0; i < MAX_ELE; ++i) if (tree.search(i * 13)) ++foundCount;
+        std::cout << "BSTree: found " << foundCount << " / " << MAX_ELE << "\n";
     });
 
-    // Single search
-    Benchmark::run("BSTree::search(41)", [&]() {
-        bool found = tree.search(41L);
-        std::cout << "search(41) = " << (found ? "found" : "not found") << "\n";
-    });
-
-    // Remove
+    // remove
     Benchmark::run("BSTree::remove(13*k) k <= MAX_ELE", [&]() {
-        for (int i = 0; i < MAX_ELE; ++i) {
-            tree.remove(static_cast<long int>(i) * 13L);
-        }
+        for (int i = 0; i < MAX_ELE; ++i) tree.remove(i * 13);
     });
-
-    // Search after removals
-    Benchmark::run("BSTree::search(42) after removals", [&]() {
-        bool found = tree.search(42L);
-        std::cout << "search(42) = " << (found ? "found" : "not found") << "\n";
-    });
+    
 
     Benchmark::printHistory();
     Benchmark::clearHistory();
 }
 
+/* Entrypoint */
 int BenchmarkRbBsMapSet::compareBenchmarkRbBsMapSet() {
     try {
-        std::cout << "MAX_ELE: " << MAX_ELE << std::endl;
-
+        std::cout << "MAX_ELE: " << MAX_ELE << "\n";
         benchRBTree();
         benchUnorderedSet();
         benchSet();
         benchMap();
         benchBSTree();
-
-        return EXIT_SUCCESS;
+        return 0;
     } catch (const std::exception& ex) {
         std::cerr << "Benchmark execution failed: " << ex.what() << "\n";
-        return EXIT_FAILURE;
+        return 1;
     } catch (...) {
         std::cerr << "Benchmark execution failed: unknown error\n";
-        return EXIT_FAILURE;
+        return 1;
     }
 }
