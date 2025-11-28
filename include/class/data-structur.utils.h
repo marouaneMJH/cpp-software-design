@@ -6,6 +6,9 @@
 #include <queue>
 #include <random>
 #include <algorithm>
+#include <unordered_set>
+#include <set>
+#include <map>
 
 class DataStructureUtils
 {
@@ -117,4 +120,62 @@ public:
         }
         std::cout << "\n";
     }
+
+
+    template <class T>
+    static std::unordered_set<T> unorderedSetLoadFromFile(const std::string &fileIn)
+    {
+        std::ifstream ifs(fileIn);
+        if (!ifs.is_open())
+        {
+            throw std::runtime_error("Cannot open file: " + fileIn);
+        }
+
+        std::unordered_set<T> result;
+        T value;
+        while (ifs >> value)
+        {
+            result.insert(std::move(value));
+        }
+        return result;
+    }
+
+
+    
+template <class T>
+static std::set<T> setLoadFromFile(const std::string &fileIn)
+{
+    std::ifstream ifs(fileIn);
+    if (!ifs.is_open())
+    {
+        throw std::runtime_error("Cannot open file: " + fileIn);
+    }
+
+    std::set<T> result;
+    T value;
+    while (ifs >> value)
+    {
+        result.insert(std::move(value));
+    }
+    return result;
+}
+template <class K, class V>
+static std::map<K, V> mapLoadFromFile(const std::string &fileIn)
+{
+    std::ifstream ifs(fileIn);
+    if (!ifs.is_open())
+    {
+        throw std::runtime_error("Cannot open file: " + fileIn);
+    }
+
+    std::map<K, V> result;
+    K key;
+    V value;
+    while (ifs >> key >> value)
+    {
+        // assign value for the key (overwrites if key already present)
+        result[key] = std::move(value);
+    }
+    return result;
+}
 };

@@ -58,6 +58,10 @@
         "list": "cpp",
         "chrono": "cpp",
         "ratio": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "unordered_set": "cpp",
+        "sstream": "cpp",
+        "map": "cpp",
+        "set": "cpp"
     }
 }

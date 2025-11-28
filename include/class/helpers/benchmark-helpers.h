@@ -3,7 +3,7 @@
 #include <vector>
 #include <functional>
 #include <chrono>
-
+#include "../../shared/insi-colors.h"
 class Benchmark
 {
 public:
@@ -26,6 +26,11 @@ public:
 
     static void log(const std::string& label, long long ms);
     static void printHistory();
+
+
+    // todo: benchmark method to show table using mark down style
+    // static void printHistoryMd();
+    
     static void clearHistory();
 };
 
