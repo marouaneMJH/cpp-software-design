@@ -24,6 +24,7 @@
 #include "class/tree/tree.h"
 #include "class/tree/binary_tree_search.h"
 #include "class/tree/red_black_tree.h"
+#include "class/tree/avl_tree.h"
 
 #include "class/data-structur.utils.h"
 

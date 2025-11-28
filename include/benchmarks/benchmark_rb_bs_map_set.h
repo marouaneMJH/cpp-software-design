@@ -13,7 +13,7 @@ private:
     static void benchUnorderedSet();
     static void benchSet();
     static void benchMap();
-    static void benchBSTree();
+    static void benAVLTree();
 
     // small utility for printing header
     static void printHeader(const std::string& title);

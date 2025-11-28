@@ -1,7 +1,7 @@
 #include "../../benchmarks/benchmark_rb_bs_map_set.h"
 
 #ifndef MAX_ELE
-#define MAX_ELE 1000000
+#define MAX_ELE 10'000'000
 #endif
 
 void BenchmarkRbBsMapSet::printHeader(const std::string& title) {
@@ -142,43 +142,39 @@ void BenchmarkRbBsMapSet::benchMap() {
     Benchmark::clearHistory();
 }
 
-/* BSTree<long int> */
-void BenchmarkRbBsMapSet::benchBSTree() {
-    printHeader("BSTree<int>");
-    BSTree<int> tree;
+
+void BenchmarkRbBsMapSet::benAVLTree() {
+    printHeader("AVLTree<int>");
+    AVLTree<int> tree;
 
     // load
-    Benchmark::run("BSTree::loadFromFile", [&]() {
+    Benchmark::run("AVLTree::loadFromFile", [&]() {
         size_t count = tree.loadFromFile("assets/big_int_numbers.txt");
-        std::cout << count << " loaded items into BSTree\n";
+        std::cout << count << " loaded items into AVLTree\n";
     });
 
     // insert
-    Benchmark::run("BSTree::insert(k*13) k <= MAX_ELE", [&]() {
-        try {
-            for (int i = 0; i < MAX_ELE; ++i) tree.insert(i * 13);
-        } catch (const std::exception& err) {
-            std::cerr << err.what() << "\n";
-        }
-        
+    Benchmark::run("AVLTree::insert(k*13) k <= MAX_ELE", [&]() {
+        for (int i = 0; i < MAX_ELE; ++i) tree.insert(i * 13);
     });
 
-    // search
-    Benchmark::run("BSTree::search(k*13) k <= MAX_ELE", [&]() {
+    // search (summary)
+    Benchmark::run("AVLTree::search(k*13) k <= MAX_ELE", [&]() {
         size_t foundCount = 0;
         for (int i = 0; i < MAX_ELE; ++i) if (tree.search(i * 13)) ++foundCount;
-        std::cout << "BSTree: found " << foundCount << " / " << MAX_ELE << "\n";
+        std::cout << "AVLTree: found " << foundCount << " / " << MAX_ELE << "\n";
     });
 
     // remove
-    Benchmark::run("BSTree::remove(13*k) k <= MAX_ELE", [&]() {
+    Benchmark::run("AVLTree::remove(13*k) k <= MAX_ELE", [&]() {
         for (int i = 0; i < MAX_ELE; ++i) tree.remove(i * 13);
     });
-    
 
     Benchmark::printHistory();
     Benchmark::clearHistory();
 }
+
+
 
 /* Entrypoint */
 int BenchmarkRbBsMapSet::compareBenchmarkRbBsMapSet() {
@@ -188,7 +184,7 @@ int BenchmarkRbBsMapSet::compareBenchmarkRbBsMapSet() {
         benchUnorderedSet();
         benchSet();
         benchMap();
-        benchBSTree();
+        benAVLTree();
         return 0;
     } catch (const std::exception& ex) {
         std::cerr << "Benchmark execution failed: " << ex.what() << "\n";
