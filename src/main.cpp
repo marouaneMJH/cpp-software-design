@@ -18,11 +18,11 @@ int rbtImplementationTest();
 // todo: bnenchmark functionality compares between rb-tree, bs-tree, set, map
 
 /**
- * benchmark for rb,set,map,bs with:
- * - insertion (loading a random numbers from a file)
- * -  insertion sorted numbers
- * - deleting the sorted numbers
- * - search for all the sorted numbers
+ * - Benchmark for rb,set,map,bs with:
+ * - Insertion (loading a random numbers from a file)
+ * - Insertion sorted numbers
+ * - Deleting the sorted numbers
+ * - Search for all the sorted numbers
 */
 
 // -------------------------------------------------------------
@@ -30,8 +30,6 @@ int rbtImplementationTest();
 // -------------------------------------------------------------
 int main(int arc,  char* argv[])
 {
-
-    // Todo: a time function to truck the time of execution of each functionality
 
     if(string(argv[1]) == "adaptor")
         return adaptorClass();
@@ -46,14 +44,23 @@ int main(int arc,  char* argv[])
     if(string(argv[1]) == "rb-tree")
         return rbtImplementationTest();
     if(string(argv[1]) == "ben-rb-bs-map-set")
-        return BenchmarkRbBsMapSet::compareBenchmarkRbBsMapSet();
+    {
+        return 
+        !(
+            !BenchmarkRbBsMapSet<int>::compareBenchmarkRbBsMapSet("assets/big_int_numbers.txt") &&
+            !BenchmarkRbBsMapSet<long>::compareBenchmarkRbBsMapSet("assets/big_long_numbers.txt") &&
+            !BenchmarkRbBsMapSet<float>::compareBenchmarkRbBsMapSet("assets/big_float_numbers.txt") &&
+            !BenchmarkRbBsMapSet<std::string>::compareBenchmarkRbBsMapSet("assets/big_strings.txt")
+        );
+    }
 
     printf("\nMake sure to add the tp name after the main (ex: ./build/main bs-tree)");
 
     return 1;
 }
 
-// ---------- treeImplementation ----------
+
+
 int adaptorClass()
 {
     Dic dic;
@@ -122,7 +129,6 @@ int treeImplementation()
     return 0;
 }
 
-// ---------- bstImplementationTest ----------
 int bstImplementationTest()
 {
     BSTree<long int> tree;
