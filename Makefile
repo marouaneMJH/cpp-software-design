@@ -14,7 +14,7 @@ endif
 
 # ---- Toolchain & flags ----
 CXX      ?= g++
-CXXFLAGS ?= -std=c++17 -Wall -Wextra -O2 -MMD -MP
+CXXFLAGS ?= -std=c++23 -Wall -Wextra -O2 -MMD -MP
 # On Windows console apps this helps choose the right entry point
 # Use -mconsole instead of -Wl,--subsystem,console for better MinGW compatibility
 LDFLAGS  ?= -mconsole
