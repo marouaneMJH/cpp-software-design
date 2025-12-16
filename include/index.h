@@ -8,11 +8,9 @@
 #include <algorithm>
 #include <chrono>
 
-
 // ------------- Helpers -------------
 // todo: make index file export for the helpers classes
 #include "class/helpers/benchmark-helpers.h"
-
 
 // ------------- Classes -------------
 
@@ -30,7 +28,6 @@
 
 // Shared
 #include "shared/insi-colors.h"
-
 
 #define MAX_RAND_ELE 100'000
 
