@@ -3,11 +3,14 @@
 #include <vector>
 #include <functional>
 #include <chrono>
+#include <ostream>
+#include <iostream>
 #include "../../shared/insi-colors.h"
 class Benchmark
 {
 public:
-    struct Entry {
+    struct Entry
+    {
         std::string label;
         long long durationMs;
     };
@@ -22,15 +25,11 @@ public:
 
     static void begin();
     static long long end();
-    static long long run(const std::string& label, const std::function<void()>& fn);
+    static long long run(const std::string &label, const std::function<void()> &fn, std::ostream &os = std::cout);
 
-    static void log(const std::string& label, long long ms);
-    static void printHistory();
+    static void log(const std::string &label, long long ms, std::ostream &os = std::cout);
+    static void printHistory(std::ostream &os = std::cout);
 
-
-    // todo: benchmark method to show table using mark down style
-    // static void printHistoryMd();
-    
     static void clearHistory();
 };
 

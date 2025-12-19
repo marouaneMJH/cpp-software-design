@@ -2,8 +2,6 @@
 #include <iostream>
 #include <iomanip>
 
-
-
 // static members
 std::vector<Benchmark::Entry> Benchmark::history;
 std::chrono::high_resolution_clock::time_point Benchmark::startTime;
@@ -26,22 +24,22 @@ long long Benchmark::end()
 }
 
 // Execute and measure a callback function
-long long Benchmark::run(const std::string& label, const std::function<void()>& fn)
+long long Benchmark::run(const std::string &label, const std::function<void()> &fn, std::ostream &os)
 {
     begin();
     fn();
     long long ms = end();
 
-    log(label, ms);
-    history.push_back({ label, ms });
+    log(label, ms, os);
+    history.push_back({label, ms});
 
     return ms;
 }
 
 // Colored log
-void Benchmark::log(const std::string& label, long long ms)
+void Benchmark::log(const std::string &label, long long ms, std::ostream &os)
 {
-    std::cout
+    os
         << CYAN << "[Benchmark] "
         << YELLOW << label << RESET
         << " executed in "
@@ -50,21 +48,23 @@ void Benchmark::log(const std::string& label, long long ms)
 }
 
 // Print all benchmark history entries
-void Benchmark::printHistory()
+void Benchmark::printHistory(std::ostream &os)
 {
-    std::cout << BLUE << "\n=== Benchmark History ===\n" << RESET;
+    os << BLUE << "\n=== Benchmark History ===\n"
+       << RESET;
 
-    for (std::size_t i = 0; i < history.size(); i++) {
-        const Entry& e = history[i];
+    for (std::size_t i = 0; i < history.size(); i++)
+    {
+        const Entry &e = history[i];
 
-        std::cout 
+        os
             << std::setw(3) << i << " | "
             << YELLOW << e.label << RESET << " : "
             << GREEN << e.durationMs << " ms" << RESET
             << std::endl;
     }
 
-    std::cout << std::endl;
+    os << std::endl;
 }
 
 // Clear history

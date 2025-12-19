@@ -30,7 +30,7 @@ int main(int arc, char *argv[])
             !BenchmarkRbBsMapSet<std::string>::compareBenchmarkRbBsMapSet("assets/big_strings.txt"));
     }
 
-    printf("\nMake sure to add the tp name after the main (ex: ./build/main bs-tree)");
+    std::cout << "\nMake sure to add the tp name after the main (ex: ./build/main bs-tree)" << std::endl;
 
     return 1;
 }
